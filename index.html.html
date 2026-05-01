@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Triage des Red Flags — ERC2</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #111520;
+  color: #e2e6f8;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 14px;
+  min-height: 100vh;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* TOP BAR */
+#topbar {
+  background: #181c2e;
+  border-bottom: 1px solid rgba(255,255,255,0.09);
+  padding: 12px 22px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 8px;
+  position: sticky; top: 0; z-index: 100;
+}
+#topbar h1 { font-size: 15px; font-weight: 600; color: #fff; }
+.sub { font-size: 11px; color: #5a6390; margin-top: 2px; }
+.hdr-r { display: flex; align-items: center; gap: 10px; }
+
+.chip {
+  background: #1e2338; border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 18px; padding: 4px 12px;
+  font-size: 13px; display: flex; align-items: center; gap: 7px; color: #7880a8;
+}
+.chip b { color: #fff; font-size: 14px; }
+#pw { width: 60px; height: 4px; background: rgba(255,255,255,0.09); border-radius: 2px; overflow: hidden; }
+#pf { height: 100%; background: #6c63ff; border-radius: 2px; transition: width .3s; width: 0; }
+
+.btn-top {
+  background: transparent; border: 1px solid rgba(255,255,255,0.14);
+  color: #7880a8; border-radius: 6px; padding: 5px 12px;
+  font-size: 13px; cursor: pointer; transition: all .15s;
+}
+.btn-top:hover { border-color: #6c63ff; color: #fff; }
+
+/* MAIN */
+main { padding: 18px 22px; max-width: 1500px; margin: 0 auto; }
+
+#instruction {
+  font-size: 12px; color: #7880a8;
+  background: rgba(108,99,255,0.08); border: 1px solid rgba(108,99,255,0.2);
+  border-radius: 7px; padding: 8px 13px;
+  margin-bottom: 14px; line-height: 1.7;
+}
+#instruction b { color: #a09af0; }
+
+.legend { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; flex-wrap: wrap; }
+.leg { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: #5a6390; }
+.dot-o { width: 7px; height: 7px; border-radius: 50%; background: #f39c12; display: inline-block; flex-shrink: 0; }
+.dot-s { width: 7px; height: 7px; border-radius: 50%; background: #6c63ff; display: inline-block; flex-shrink: 0; }
+
+.lbl { font-size: 10px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: #3a4060; margin-bottom: 7px; }
+
+/* BANQUE */
+#bank {
+  background: #181c2e; border: 1.5px solid rgba(255,255,255,0.08);
+  border-radius: 10px; padding: 11px;
+  display: flex; flex-wrap: wrap; gap: 7px;
+  min-height: 54px; margin-bottom: 20px;
+}
+
+/* CARTES BANQUE */
+.card {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 13px; border-radius: 16px;
+  font-size: 12.5px; cursor: pointer;
+  background: #1e2338; border: 1.5px solid rgba(255,255,255,0.13);
+  color: #dde1f7;
+  transition: border-color .12s, background .12s, transform .1s, box-shadow .1s;
+  white-space: nowrap;
+}
+.card:hover:not(.done) { border-color: rgba(255,255,255,0.3); }
+.card.selected {
+  border-color: #6c63ff; background: rgba(108,99,255,0.18);
+  color: #c0bcff; transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(108,99,255,0.35);
+}
+.card.done {
+  background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.06);
+  color: #3a4060; cursor: default;
+}
+.dot-m { width: 6px; height: 6px; border-radius: 50%; background: #f39c12; flex-shrink: 0; display: inline-block; }
+
+/* INDICATEUR SELECTION */
+#sel-bar {
+  display: none; font-size: 12px; color: #a09af0;
+  margin-bottom: 12px; padding: 7px 12px;
+  background: rgba(108,99,255,0.1); border: 1px solid rgba(108,99,255,0.25);
+  border-radius: 7px; align-items: center; gap: 8px;
+}
+#sel-bar.visible { display: flex; }
+#sel-txt { flex: 1; }
+.btn-x { background: transparent; border: none; color: #6c63ff; font-size: 16px; cursor: pointer; line-height: 1; }
+
+/* GRILLE */
+#grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+@media (max-width: 1100px) { #grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 580px)  { #grid { grid-template-columns: 1fr; } }
+
+/* COLONNES */
+.col {
+  background: #181c2e; border: 1.5px solid rgba(255,255,255,0.08);
+  border-radius: 10px; overflow: hidden;
+  display: flex; flex-direction: column;
+  transition: border-color .15s, background .15s;
+}
+.col.target-active { border-color: #6c63ff; background: rgba(108,99,255,0.07); cursor: pointer; }
+.col.target-active:hover { background: rgba(108,99,255,0.12); }
+.col.v-ok   { border-color: #27ae60 !important; background: rgba(39,174,96,0.05) !important; }
+.col.v-fail { border-color: #e74c3c !important; background: rgba(231,76,60,0.04) !important; }
+
+.col-hdr {
+  padding: 8px 11px; display: flex; align-items: center; gap: 8px;
+  font-size: 12.5px; font-weight: 600;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.col-badge { font-size: 10px; font-weight: 700; font-family: monospace; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; }
+.col-cnt   { margin-left: auto; font-size: 11px; font-weight: 400; color: #3a4060; }
+
+/* ZONE DEPOT */
+.col-drop {
+  flex: 1; min-height: 52px; padding: 8px;
+  display: flex; flex-wrap: wrap; gap: 5px; align-content: flex-start;
+}
+
+/* Cartes dans colonne — neutral avant vérif */
+.placed-card {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 14px; font-size: 12px;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  color: #9ca3c8; white-space: nowrap;
+  transition: background .3s, border-color .3s, color .3s;
+}
+.placed-card .dot-m { opacity: 0.4; }
+
+/* Après vérification */
+.col.v-ok   .placed-card.correct   { background: rgba(39,174,96,0.14); border-color: rgba(39,174,96,0.4);  color: #5de89a; }
+.col.v-ok   .placed-card.incorrect { background: rgba(231,76,60,0.13); border-color: rgba(231,76,60,0.35); color: #f88080; }
+.col.v-fail .placed-card.correct   { background: rgba(39,174,96,0.10); border-color: rgba(39,174,96,0.3);  color: #5de89a; }
+.col.v-fail .placed-card.incorrect { background: rgba(231,76,60,0.13); border-color: rgba(231,76,60,0.35); color: #f88080; }
+
+/* FEEDBACK */
+.col-feedback {
+  display: none; padding: 6px 11px; font-size: 11.5px; line-height: 1.5;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.col-feedback.show { display: block; }
+.col-feedback.ok   { color: #5de89a; background: rgba(39,174,96,0.08); }
+.col-feedback.fail { color: #f88080; background: rgba(231,76,60,0.07); }
+
+/* BOUTON VERIFIER */
+.btn-verify {
+  margin: 5px 11px 7px;
+  padding: 6px 0; width: calc(100% - 22px);
+  background: rgba(108,99,255,0.12); border: 1px solid rgba(108,99,255,0.3);
+  color: #a09af0; border-radius: 6px; font-size: 12px; cursor: pointer;
+  transition: all .15s;
+}
+.btn-verify:hover { background: rgba(108,99,255,0.22); color: #c4bfff; }
+.col.v-ok   .btn-verify { background: rgba(39,174,96,0.12); border-color: rgba(39,174,96,0.35); color: #5de89a; pointer-events: none; }
+.col.v-fail .btn-verify { background: rgba(231,76,60,0.1);  border-color: rgba(231,76,60,0.3);  color: #f88080; }
+
+/* DDX GROUPES — cachés jusqu'à la vérification */
+.col-ddx { border-top: 1px solid rgba(255,255,255,0.05); padding: 6px 10px 10px; }
+.ddx-title { font-size: 9.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #3a4060; margin-bottom: 6px; }
+
+.ddx-group { margin-bottom: 8px; opacity: 0; max-height: 0; overflow: hidden; transition: opacity .35s, max-height .35s; }
+.ddx-group.visible { opacity: 1; max-height: 200px; }
+
+.ddx-group-name {
+  font-size: 11.5px; font-weight: 600; color: #5a6390;
+  padding-bottom: 3px; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 3px;
+}
+
+/* Ligne card <-> DDx */
+.ddx-line {
+  display: flex; align-items: baseline; gap: 6px;
+  font-size: 11px; line-height: 1.45; padding: 1px 0;
+}
+.ddx-flag-name {
+  color: #27ae60; font-weight: 500; white-space: nowrap; flex-shrink: 0;
+}
+.ddx-flag-name.wrong { color: #e74c3c; text-decoration: line-through; }
+.ddx-arrow { color: #3a4060; flex-shrink: 0; font-size: 10px; }
+.ddx-diag  { color: #6b74a0; }
+
+/* FIN */
+#finish {
+  display: none; margin-top: 18px; padding: 14px 18px;
+  background: rgba(39,174,96,0.12); border: 1px solid rgba(39,174,96,0.32);
+  border-radius: 10px; color: #5de89a; font-size: 13px; line-height: 1.8;
+}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <div>
+    <h1>Triage des Red Flags — ERC2</h1>
+    <div class="sub">Clic pour selectionner — clic sur la colonne pour placer — Verifier par section</div>
+  </div>
+  <div class="hdr-r">
+    <div class="chip">
+      <b id="sn">0</b><span>/</span><span id="st">0</span>
+      <div id="pw"><div id="pf"></div></div>
+    </div>
+    <button class="btn-top" onclick="resetAll()">Recommencer</button>
+  </div>
+</div>
+
+<main>
+  <div id="instruction">
+    <b>1.</b> Clique une carte pour la selectionner (violette). &nbsp;
+    <b>2.</b> Clique la colonne ou tu penses qu'elle appartient — tu peux te tromper. &nbsp;
+    <b>3.</b> Quand tu es pret, clique <b>Verifier</b> pour voir le resultat et les associations avec les pathologies. &nbsp;
+    Les cartes a point orange appartiennent a plusieurs systemes.
+  </div>
+
+  <div class="legend">
+    <div class="leg"><span class="dot-o"></span> Transversal (plusieurs systemes)</div>
+    <div class="leg"><span class="dot-s"></span> Selectionnee</div>
+  </div>
+
+  <div id="sel-bar">
+    <span id="sel-txt"></span>
+    <button class="btn-x" onclick="deselect()">✕</button>
+  </div>
+
+  <div class="lbl">Red flags a trier</div>
+  <div id="bank">
+    <div class="card" data-id="c01" data-sys="syncope,arythmie"><span class="dot-m"></span>Syncope a l'effort</div>
+    <div class="card" data-id="c02" data-sys="syncope,arythmie"><span class="dot-m"></span>Syncope en position couchee</div>
+    <div class="card" data-id="c03" data-sys="syncope,arythmie"><span class="dot-m"></span>Debut et fin soudaine de la perte de conscience</div>
+    <div class="card" data-id="c04" data-sys="arythmie,choc,ic"><span class="dot-m"></span>Hypotension</div>
+    <div class="card" data-id="c05" data-sys="arythmie,choc,ic,hypo"><span class="dot-m"></span>Tachycardie</div>
+    <div class="card" data-id="c06" data-sys="arythmie,choc"><span class="dot-m"></span>Bradycardie + signes d'hypoperfusion</div>
+    <div class="card" data-id="c07" data-sys="arythmie,choc"><span class="dot-m"></span>FC > TAS (adulte)</div>
+    <div class="card" data-id="c08" data-sys="choc,ic,hypo,avc,conv,abdo"><span class="dot-m"></span>AEC / confusion / agitation</div>
+    <div class="card" data-id="c09" data-sys="arythmie,choc,ic,hypo"><span class="dot-m"></span>Diaphorese</div>
+    <div class="card" data-id="c10" data-sys="choc,ic"><span class="dot-m"></span>Peau marbree / pale / cyanosee</div>
+    <div class="card" data-id="c11" data-sys="choc">Remplissage capillaire > 2 s</div>
+    <div class="card" data-id="c12" data-sys="choc">Pouls peripheriques filants</div>
+    <div class="card" data-id="c13" data-sys="ic">Dyspnee au repos</div>
+    <div class="card" data-id="c14" data-sys="ic">Crepitants bilateraux</div>
+    <div class="card" data-id="c15" data-sys="ic,conv"><span class="dot-m"></span>SpO2 basse (hypoxemie)</div>
+    <div class="card" data-id="c16" data-sys="hypo,avc"><span class="dot-m"></span>Dysfonction neurologique focale</div>
+    <div class="card" data-id="c17" data-sys="hypo,conv"><span class="dot-m"></span>Glycemie &lt; 4 mmol/L</div>
+    <div class="card" data-id="c18" data-sys="avc">Cincinnati &gt;= 1/3</div>
+    <div class="card" data-id="c19" data-sys="avc">Cephalee en coup de tonnerre</div>
+    <div class="card" data-id="c20" data-sys="avc">Ataxie + vertiges + diplopie</div>
+    <div class="card" data-id="c21" data-sys="avc">Triade de Cushing</div>
+    <div class="card" data-id="c22" data-sys="conv">Convulsions &gt;= 5 min OU repetitives sans retour etat de base</div>
+    <div class="card" data-id="c23" data-sys="conv">Absence de retour a l'etat de base post-ictal</div>
+    <div class="card" data-id="c24" data-sys="conv">Absence de pouls a la resolution</div>
+    <div class="card" data-id="c25" data-sys="choc,abdo"><span class="dot-m"></span>Masse pulsatile + douleur irradiant au dos</div>
+    <div class="card" data-id="c26" data-sys="abdo">Douleur disproportionnee p/r a l'examen physique</div>
+    <div class="card" data-id="c27" data-sys="abdo">Distension abdominale + defense / rigidite</div>
+    <div class="card" data-id="c28" data-sys="choc,abdo"><span class="dot-m"></span>Hematemese / melena / rectorragie + instabilite</div>
+    <div class="card" data-id="c29" data-sys="arythmie,ic"><span class="dot-m"></span>DRS associee au trouble de rythme ou dyspnee</div>
+    <div class="card" data-id="c30" data-sys="choc,ic"><span class="dot-m"></span>Tachypnee importante</div>
+    <div class="card" data-id="c31" data-sys="syncope">Syncope + blessure associee</div>
+    <div class="card" data-id="c32" data-sys="choc">Femme en age de procreer + douleur abdo basse subite</div>
+    <div class="card" data-id="c33" data-sys="abdo">Melena (selles noires, goudronneuses)</div>
+    <div class="card" data-id="c34" data-sys="abdo">Hematemese en marc de cafe</div>
+    <div class="card" data-id="c35" data-sys="abdo">Rectorragie franche + instabilite hemodynamique</div>
+    <div class="card" data-id="c36" data-sys="avc">AEC + vomissements en jet + anisocorie</div>
+    <div class="card" data-id="c37" data-sys="hypo,conv"><span class="dot-m"></span>Tremblements</div>
+    <div class="card" data-id="c38" data-sys="hypo,arythmie"><span class="dot-m"></span>Pediatrie : bradycardie + hypothermie + pauses respiratoires</div>
+  </div>
+
+  <div id="grid">
+
+    <!-- SYNCOPE -->
+    <div class="col" data-sys="syncope">
+      <div class="col-hdr" style="background:rgba(167,139,250,0.1)">
+        <span class="col-badge" style="background:rgba(167,139,250,0.18);color:#a78bfa">SYN</span>
+        <span style="color:#a78bfa">Syncope / Lipothymie</span>
+        <span class="col-cnt" data-sys="syncope">0</span>
+      </div>
+      <div class="col-drop" data-sys="syncope"></div>
+      <button class="btn-verify" data-sys="syncope">Verifier cette section</button>
+      <div class="col-feedback" data-sys="syncope"></div>
+      <div class="col-ddx">
+        <div class="ddx-title">Dx differentiels</div>
+        <div class="ddx-group" data-group="syncope-1" data-flags="c01,c02,c03">
+          <div class="ddx-group-name">Arythmie maligne</div>
+          <div class="ddx-line" data-flag="c01"><span class="ddx-flag-name">Syncope a l'effort</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">TV / FV transitoire</span></div>
+          <div class="ddx-line" data-flag="c02"><span class="ddx-flag-name">Syncope en position couchee</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Arythmie maligne probable</span></div>
+          <div class="ddx-line" data-flag="c03"><span class="ddx-flag-name">Debut et fin soudaine</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Origine cardiaque / arythmie</span></div>
+        </div>
+        <div class="ddx-group" data-group="syncope-2" data-flags="c01">
+          <div class="ddx-group-name">Syndrome coronarien aigu (SCA)</div>
+          <div class="ddx-line" data-flag="c01"><span class="ddx-flag-name">Syncope a l'effort</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Ischémie a l'effort</span></div>
+        </div>
+        <div class="ddx-group" data-group="syncope-3" data-flags="c01,c02">
+          <div class="ddx-group-name">Cardiomyopathie / Stenose aortique</div>
+          <div class="ddx-line" data-flag="c01"><span class="ddx-flag-name">Syncope a l'effort</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Obstruction a l'effort</span></div>
+          <div class="ddx-line" data-flag="c02"><span class="ddx-flag-name">Syncope en position couchee</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Exclut vasovagale / orthostatique</span></div>
+        </div>
+        <div class="ddx-group" data-group="syncope-4" data-flags="c31">
+          <div class="ddx-group-name">Origine cardiaque ou convulsive</div>
+          <div class="ddx-line" data-flag="c31"><span class="ddx-flag-name">Syncope + blessure associee</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Perte de tonus brutale — arythmie ou convulsion</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ARYTHMIES -->
+    <div class="col" data-sys="arythmie">
+      <div class="col-hdr" style="background:rgba(96,165,250,0.1)">
+        <span class="col-badge" style="background:rgba(96,165,250,0.18);color:#60a5fa">ARY</span>
+        <span style="color:#60a5fa">Arythmies</span>
+        <span class="col-cnt" data-sys="arythmie">0</span>
+      </div>
+      <div class="col-drop" data-sys="arythmie"></div>
+      <button class="btn-verify" data-sys="arythmie">Verifier cette section</button>
+      <div class="col-feedback" data-sys="arythmie"></div>
+      <div class="col-ddx">
+        <div class="ddx-title">Dx differentiels</div>
+        <div class="ddx-group" data-group="arythmie-1" data-flags="c05,c09,c29">
+          <div class="ddx-group-name">Tachycardie ventriculaire (TV)</div>
+          <div class="ddx-line" data-flag="c05"><span class="ddx-flag-name">Tachycardie</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Rythme ventriculaire rapide</span></div>
+          <div class="ddx-line" data-flag="c09"><span class="ddx-flag-name">Diaphorese</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Hypoperfusion systemique</span></div>
+          <div class="ddx-line" data-flag="c29"><span class="ddx-flag-name">DRS associee</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Ischmie concomitante</span></div>
+        </div>
+        <div class="ddx-group" data-group="arythmie-2" data-flags="c04,c05,c29">
+          <div class="ddx-group-name">Fibrillation / flutter auriculaire</div>
+          <div class="ddx-line" data-flag="c04"><span class="ddx-flag-name">Hypotension</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Perte de la systole auriculaire</span></div>
+          <div class="ddx-line" data-flag="c05"><span class="ddx-flag-name">Tachycardie</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Reponse ventriculaire rapide</span></div>
+          <div class="ddx-line" data-flag="c29"><span class="ddx-flag-name">DRS associee</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Ischémie / embolie pulmonaire</span></div>
+        </div>
+        <div class="ddx-group" data-group="arythmie-3" data-flags="c06,c04,c07">
+          <div class="ddx-group-name">Bloc auriculo-ventriculaire (BAV)</div>
+          <div class="ddx-line" data-flag="c06"><span class="ddx-flag-name">Bradycardie + hypoperfusion</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Debit cardiaque insuffisant</span></div>
+          <div class="ddx-line" data-flag="c04"><span class="ddx-flag-name">Hypotension</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Choc bradycardique</span></div>
+          <div class="ddx-line" data-flag="c07"><span class="ddx-flag-name">FC > TAS</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Indicateur de choc severe</span></div>
+        </div>
+        <div class="ddx-group" data-group="arythmie-4" data-flags="c06,c07,c09,c38">
+          <div class="ddx-group-name">Intoxication (digoxine, betabloq.)</div>
+          <div class="ddx-line" data-flag="c06"><span class="ddx-flag-name">Bradycardie + hypoperfusion</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Effet chronotrope negatif</span></div>
+          <div class="ddx-line" data-flag="c07"><span class="ddx-flag-name">FC > TAS</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Choc medicamenteux</span></div>
+          <div class="ddx-line" data-flag="c09"><span class="ddx-flag-name">Diaphorese</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Hypoperfusion / nausees toxiques</span></div>
+          <div class="ddx-line" data-flag="c38"><span class="ddx-flag-name">Bradycardie + hypothermie (pediatrie)</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Stade preterminal — risque ACR imminent</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHOCS -->
+    <div class="col" data-sys="choc">
+      <div class="col-hdr" style="background:rgba(248,113,113,0.1)">
+        <span class="col-badge" style="background:rgba(248,113,113,0.18);color:#f87171">CHC</span>
+        <span style="color:#f87171">Chocs</span>
+        <span class="col-cnt" data-sys="choc">0</span>
+      </div>
+      <div class="col-drop" data-sys="choc"></div>
+      <button class="btn-verify" data-sys="choc">Verifier cette section</button>
+      <div class="col-feedback" data-sys="choc"></div>
+      <div class="col-ddx">
+        <div class="ddx-title">Dx differentiels</div>
+        <div class="ddx-group" data-group="choc-1" data-flags="c11,c12,c25,c28">
+          <div class="ddx-group-name">Choc hemorragique</div>
+          <div class="ddx-line" data-flag="c11"><span class="ddx-flag-name">RC > 2 s</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Hypovolemie / vasoconstriction</span></div>
+          <div class="ddx-line" data-flag="c12"><span class="ddx-flag-name">Pouls filants</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Debit cardiaque effondre</span></div>
+          <div class="ddx-line" data-flag="c25"><span class="ddx-flag-name">Masse pulsatile + douleur dos</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Rupture AAA</span></div>
+          <div class="ddx-line" data-flag="c28"><span class="ddx-flag-name">Hematemese / melena</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Hemorragie digestive</span></div>
+        </div>
+        <div class="ddx-group" data-group="choc-2" data-flags="c04,c05,c08,c09,c10">
+          <div class="ddx-group-name">Choc distributif / sepsis</div>
+          <div class="ddx-line" data-flag="c04"><span class="ddx-flag-name">Hypotension</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Vasoplegie septique</span></div>
+          <div class="ddx-line" data-flag="c05"><span class="ddx-flag-name">Tachycardie</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Compensation hyperdynamique</span></div>
+          <div class="ddx-line" data-flag="c08"><span class="ddx-flag-name">AEC</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Encephalopathie septique</span></div>
+        </div>
+        <div class="ddx-group" data-group="choc-3" data-flags="c06,c07,c10,c30">
+          <div class="ddx-group-name">Choc obstructif (EP, tamponnade)</div>
+          <div class="ddx-line" data-flag="c06"><span class="ddx-flag-name">Bradycardie + hypoperfusion</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Tamponnade / PEA</span></div>
+          <div class="ddx-line" data-flag="c10"><span class="ddx-flag-name">Peau marbree</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Vasoconstriction severe</span></div>
+          <div class="ddx-line" data-flag="c30"><span class="ddx-flag-name">Tachypnee importante</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Embolie pulmonaire massive</span></div>
+        </div>
+        <div class="ddx-group" data-group="choc-4" data-flags="c32">
+          <div class="ddx-group-name">Grossesse ectopique rompue</div>
+          <div class="ddx-line" data-flag="c32"><span class="ddx-flag-name">Femme en age de procreer + douleur abdo basse</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Choc hemorragique intra-abdominal</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IC -->
+    <div class="col" data-sys="ic">
+      <div class="col-hdr" style="background:rgba(52,211,153,0.1)">
+        <span class="col-badge" style="background:rgba(52,211,153,0.18);color:#34d399">I.C.</span>
+        <span style="color:#34d399">Insuffisance cardiaque</span>
+        <span class="col-cnt" data-sys="ic">0</span>
+      </div>
+      <div class="col-drop" data-sys="ic"></div>
+      <button class="btn-verify" data-sys="ic">Verifier cette section</button>
+      <div class="col-feedback" data-sys="ic"></div>
+      <div class="col-ddx">
+        <div class="ddx-title">Dx differentiels</div>
+        <div class="ddx-group" data-group="ic-1" data-flags="c13,c14,c15">
+          <div class="ddx-group-name">Oedeme aigu du poumon (OAP)</div>
+          <div class="ddx-line" data-flag="c13"><span class="ddx-flag-name">Dyspnee au repos</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Inondation alveolaire</span></div>
+          <div class="ddx-line" data-flag="c14"><span class="ddx-flag-name">Crepitants bilateraux</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Oedeme pulmonaire</span></div>
+          <div class="ddx-line" data-flag="c15"><span class="ddx-flag-name">SpO2 basse</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Shunt intrapulmonaire</span></div>
+        </div>
+        <div class="ddx-group" data-group="ic-2" data-flags="c04,c05,c08,c09,c10,c30">
+          <div class="ddx-group-name">Choc cardiogenique</div>
+          <div class="ddx-line" data-flag="c04"><span class="ddx-flag-name">Hypotension</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Debit systolique effondre</span></div>
+          <div class="ddx-line" data-flag="c09"><span class="ddx-flag-name">Diaphorese</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Activation sympathique</span></div>
+          <div class="ddx-line" data-flag="c10"><span class="ddx-flag-name">Peau marbree</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Vasoconstriction compensatrice</span></div>
+        </div>
+        <div class="ddx-group" data-group="ic-3" data-flags="c29,c08,c05">
+          <div class="ddx-group-name">SCA avec defaillance ventriculaire</div>
+          <div class="ddx-line" data-flag="c29"><span class="ddx-flag-name">DRS + dyspnee</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Ischémie + surcharge ventriculaire</span></div>
+          <div class="ddx-line" data-flag="c08"><span class="ddx-flag-name">AEC</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Hypoperfusion cerebrale</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HYPOGLYCEMIE -->
+    <div class="col" data-sys="hypo">
+      <div class="col-hdr" style="background:rgba(251,191,36,0.1)">
+        <span class="col-badge" style="background:rgba(251,191,36,0.18);color:#fbbf24">HYP</span>
+        <span style="color:#fbbf24">Hypoglycemie</span>
+        <span class="col-cnt" data-sys="hypo">0</span>
+      </div>
+      <div class="col-drop" data-sys="hypo"></div>
+      <button class="btn-verify" data-sys="hypo">Verifier cette section</button>
+      <div class="col-feedback" data-sys="hypo"></div>
+      <div class="col-ddx">
+        <div class="ddx-title">Dx differentiels</div>
+        <div class="ddx-group" data-group="hypo-1" data-flags="c08,c17,c09,c37">
+          <div class="ddx-group-name">Hypoglycemie severe</div>
+          <div class="ddx-line" data-flag="c08"><span class="ddx-flag-name">AEC / agitation</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Neuroglycopenie</span></div>
+          <div class="ddx-line" data-flag="c17"><span class="ddx-flag-name">Glycemie &lt; 4 mmol/L</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Critere diagnostique</span></div>
+          <div class="ddx-line" data-flag="c09"><span class="ddx-flag-name">Diaphorese</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Reponse adrenerglique</span></div>
+          <div class="ddx-line" data-flag="c37"><span class="ddx-flag-name">Tremblements</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Premier signe adrenerglique — reponse au deficit en glucose</span></div>
+        </div>
+        <div class="ddx-group" data-group="hypo-2" data-flags="c16">
+          <div class="ddx-group-name">AVC ischemique — DDx a exclure</div>
+          <div class="ddx-line" data-flag="c16"><span class="ddx-flag-name">Dysfonction neurologique focale</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Glycemie obligatoire avant conclusion AVC</span></div>
+        </div>
+        <div class="ddx-group" data-group="hypo-3" data-flags="c05,c08">
+          <div class="ddx-group-name">Intoxication alcoolique</div>
+          <div class="ddx-line" data-flag="c08"><span class="ddx-flag-name">AEC / agitation</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Hypoglycemie + depression SNC</span></div>
+          <div class="ddx-line" data-flag="c05"><span class="ddx-flag-name">Tachycardie</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Reponse sympathique</span></div>
+        </div>
+        <div class="ddx-group" data-group="hypo-4" data-flags="c38">
+          <div class="ddx-group-name">Hypoglycemie pediatrique</div>
+          <div class="ddx-line" data-flag="c38"><span class="ddx-flag-name">Bradycardie + hypothermie + pauses respi</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Presentation atypique — presentation neonatale / nourrisson</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AVC -->
+    <div class="col" data-sys="avc">
+      <div class="col-hdr" style="background:rgba(134,239,172,0.1)">
+        <span class="col-badge" style="background:rgba(134,239,172,0.18);color:#86efac">AVC</span>
+        <span style="color:#86efac">AVC aigu</span>
+        <span class="col-cnt" data-sys="avc">0</span>
+      </div>
+      <div class="col-drop" data-sys="avc"></div>
+      <button class="btn-verify" data-sys="avc">Verifier cette section</button>
+      <div class="col-feedback" data-sys="avc"></div>
+      <div class="col-ddx">
+        <div class="ddx-title">Dx differentiels</div>
+        <div class="ddx-group" data-group="avc-1" data-flags="c18,c16,c08">
+          <div class="ddx-group-name">AVC ischemique anterieur</div>
+          <div class="ddx-line" data-flag="c18"><span class="ddx-flag-name">Cincinnati &gt;= 1/3</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Deficit moteur / langage / facial</span></div>
+          <div class="ddx-line" data-flag="c16"><span class="ddx-flag-name">Dysfonction neurologique focale</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Territoire carotidien</span></div>
+        </div>
+        <div class="ddx-group" data-group="avc-2" data-flags="c19">
+          <div class="ddx-group-name">Hemorragie sous-arachnoïdienne</div>
+          <div class="ddx-line" data-flag="c19"><span class="ddx-flag-name">Cephalee en coup de tonnerre</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Rupture anevrisme — urgence absolue</span></div>
+        </div>
+        <div class="ddx-group" data-group="avc-3" data-flags="c20">
+          <div class="ddx-group-name">AVC posterieur (vertebro-basilaire)</div>
+          <div class="ddx-line" data-flag="c20"><span class="ddx-flag-name">Ataxie + vertiges + diplopie</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Cincinnati negatif possible — ne rassure pas</span></div>
+        </div>
+        <div class="ddx-group" data-group="avc-4" data-flags="c21,c08,c36">
+          <div class="ddx-group-name">HTIC / Engagement cerebral</div>
+          <div class="ddx-line" data-flag="c21"><span class="ddx-flag-name">Triade de Cushing</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">HTA + Brady + respiration irreguliere</span></div>
+          <div class="ddx-line" data-flag="c08"><span class="ddx-flag-name">AEC</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Compression tronc cerebral</span></div>
+          <div class="ddx-line" data-flag="c36"><span class="ddx-flag-name">AEC + vomissements en jet + anisocorie</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">HTIC — engagement imminent</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONVULSIONS -->
+    <div class="col" data-sys="conv">
+      <div class="col-hdr" style="background:rgba(249,168,212,0.1)">
+        <span class="col-badge" style="background:rgba(249,168,212,0.18);color:#f9a8d4">CNV</span>
+        <span style="color:#f9a8d4">Convulsions</span>
+        <span class="col-cnt" data-sys="conv">0</span>
+      </div>
+      <div class="col-drop" data-sys="conv"></div>
+      <button class="btn-verify" data-sys="conv">Verifier cette section</button>
+      <div class="col-feedback" data-sys="conv"></div>
+      <div class="col-ddx">
+        <div class="ddx-title">Dx differentiels</div>
+        <div class="ddx-group" data-group="conv-1" data-flags="c22,c23,c15">
+          <div class="ddx-group-name">Etat de mal epileptique</div>
+          <div class="ddx-line" data-flag="c22"><span class="ddx-flag-name">Convulsions &gt;= 5 min</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Critere d'etat de mal</span></div>
+          <div class="ddx-line" data-flag="c23"><span class="ddx-flag-name">Absence retour etat de base</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Preparer midazolam</span></div>
+          <div class="ddx-line" data-flag="c15"><span class="ddx-flag-name">SpO2 basse</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Hypoxemie post-critique</span></div>
+        </div>
+        <div class="ddx-group" data-group="conv-2" data-flags="c17,c37">
+          <div class="ddx-group-name">Hypoglycemie convulsivante</div>
+          <div class="ddx-line" data-flag="c17"><span class="ddx-flag-name">Glycemie &lt; 4 mmol/L</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Cause metabolique traitable</span></div>
+          <div class="ddx-line" data-flag="c37"><span class="ddx-flag-name">Tremblements</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Signe prodromique d'hypoglycemie convulsivante</span></div>
+        </div>
+        <div class="ddx-group" data-group="conv-3" data-flags="c24">
+          <div class="ddx-group-name">ACR post-ictal</div>
+          <div class="ddx-line" data-flag="c24"><span class="ddx-flag-name">Absence de pouls a la resolution</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Verifier systematiquement</span></div>
+        </div>
+        <div class="ddx-group" data-group="conv-4" data-flags="c22,c15">
+          <div class="ddx-group-name">Eclampsie</div>
+          <div class="ddx-line" data-flag="c22"><span class="ddx-flag-name">Convulsions repetitives</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Femme en age de procreer</span></div>
+          <div class="ddx-line" data-flag="c15"><span class="ddx-flag-name">SpO2 basse</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Compromis respiratoire</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABDO -->
+    <div class="col" data-sys="abdo">
+      <div class="col-hdr" style="background:rgba(251,146,60,0.1)">
+        <span class="col-badge" style="background:rgba(251,146,60,0.18);color:#fb923c">ABD</span>
+        <span style="color:#fb923c">Douleur abdominale / HDH</span>
+        <span class="col-cnt" data-sys="abdo">0</span>
+      </div>
+      <div class="col-drop" data-sys="abdo"></div>
+      <button class="btn-verify" data-sys="abdo">Verifier cette section</button>
+      <div class="col-feedback" data-sys="abdo"></div>
+      <div class="col-ddx">
+        <div class="ddx-title">Dx differentiels</div>
+        <div class="ddx-group" data-group="abdo-1" data-flags="c25">
+          <div class="ddx-group-name">Rupture AAA</div>
+          <div class="ddx-line" data-flag="c25"><span class="ddx-flag-name">Masse pulsatile + douleur dos</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Transport urgent immediat</span></div>
+        </div>
+        <div class="ddx-group" data-group="abdo-2" data-flags="c26">
+          <div class="ddx-group-name">Ischemie mesenterique aigue</div>
+          <div class="ddx-line" data-flag="c26"><span class="ddx-flag-name">Douleur disproportionnee</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Abdomen souple mais instabilite hemodynamique</span></div>
+        </div>
+        <div class="ddx-group" data-group="abdo-3" data-flags="c27">
+          <div class="ddx-group-name">Peritonite</div>
+          <div class="ddx-line" data-flag="c27"><span class="ddx-flag-name">Distension + defense / rigidite</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Irritation peritoneale</span></div>
+        </div>
+        <div class="ddx-group" data-group="abdo-4" data-flags="c28,c33,c34">
+          <div class="ddx-group-name">Varices oesophagiennes / Ulcere hemorragique</div>
+          <div class="ddx-line" data-flag="c28"><span class="ddx-flag-name">Hematemese / melena</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Source haute (&gt; ligament de Treitz)</span></div>
+          <div class="ddx-line" data-flag="c33"><span class="ddx-flag-name">Melena (selles noires)</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Source HAUTE — piege classique, pas basse</span></div>
+          <div class="ddx-line" data-flag="c34"><span class="ddx-flag-name">Hematemese en marc de cafe</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">HDH plus lente — sang partiellement digere</span></div>
+        </div>
+        <div class="ddx-group" data-group="abdo-5" data-flags="c35">
+          <div class="ddx-group-name">HDB significative ou HDH massive</div>
+          <div class="ddx-line" data-flag="c35"><span class="ddx-flag-name">Rectorragie franche + instabilite</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">HDB ou HDH tres abondante (transit rapide)</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- fin grid -->
+
+  <div id="finish">
+    <strong>Toutes les sections sont verifiees et completes !</strong><br>
+    A retenir : <strong>AEC, diaphorese, hypotension</strong> et <strong>tachycardie</strong> sont les grands transversaux. C'est le fil conducteur commun a tous les modules ERC2.
+  </div>
+</main>
+
+<script>
+window.onload = function() {
+
+// ── Donnees ──────────────────────────────────────────────────────────────────
+var FLAGS_SYS = {};
+var placedIn  = {};  // cardId -> { sysId: true/false }  (toutes les colonnes ou placee)
+var verifiedOk = {};
+var selectedId = null;
+var totalPlaceable = 0;
+
+document.querySelectorAll('#bank .card').forEach(function(card) {
+  var id  = card.dataset.id;
+  var sys = card.dataset.sys.split(',');
+  FLAGS_SYS[id] = sys;
+  placedIn[id]  = {};
+  totalPlaceable += sys.length;
+});
+document.getElementById('st').textContent = totalPlaceable;
+
+// ── Selection ─────────────────────────────────────────────────────────────────
+document.getElementById('bank').addEventListener('click', function(e) {
+  var card = e.target.closest('.card');
+  if (!card || card.classList.contains('done')) return;
+  var id = card.dataset.id;
+  if (selectedId === id) { deselect(); return; }
+  if (selectedId) clearSelected();
+  selectedId = id;
+  card.classList.add('selected');
+  document.querySelectorAll('.col').forEach(function(c) { c.classList.add('target-active'); });
+  updateSelBar();
+});
+
+function clearSelected() {
+  if (!selectedId) return;
+  var c = document.querySelector('.card[data-id="' + selectedId + '"]');
+  if (c && !c.classList.contains('done')) c.classList.remove('selected');
+}
+
+window.deselect = function deselect() {
+  clearSelected();
+  selectedId = null;
+  document.querySelectorAll('.col').forEach(function(c) { c.classList.remove('target-active'); });
+  document.getElementById('sel-bar').classList.remove('visible');
+}
+
+function updateSelBar() {
+  if (!selectedId) return;
+  var sys = FLAGS_SYS[selectedId];
+  var rem = sys.filter(function(s) { return !placedIn[selectedId][s]; });
+  var txt = document.querySelector('.card[data-id="' + selectedId + '"]').textContent.trim();
+  document.getElementById('sel-txt').textContent = txt + (sys.length > 1 ? ' — ' + rem.length + ' colonne(s) restante(s)' : '');
+  document.getElementById('sel-bar').classList.add('visible');
+}
+
+document.addEventListener('click', function(e) {
+  if (!selectedId) return;
+  if (!e.target.closest('#bank') && !e.target.closest('#grid') && !e.target.closest('#sel-bar')) deselect();
+});
+
+// ── Placement — libre, pas de validation immediate ────────────────────────────
+document.getElementById('grid').addEventListener('click', function(e) {
+  var btn = e.target.closest('.btn-verify');
+  if (btn) { verifySys(btn.dataset.sys); return; }
+
+  if (!selectedId) return;
+  var col = e.target.closest('.col');
+  if (!col) return;
+  var sysId = col.dataset.sys;
+
+  // Deja place dans cette colonne
+  if (placedIn[selectedId][sysId] !== undefined) { deselect(); return; }
+
+  var card = document.querySelector('.card[data-id="' + selectedId + '"]');
+  if (!card) return;
+
+  // Enregistrer le placement (on ne sait pas encore si correct)
+  var isCorrect = FLAGS_SYS[selectedId].indexOf(sysId) !== -1;
+  placedIn[selectedId][sysId] = isCorrect;
+
+  // Ajouter carte dans la colonne — neutre visuellement
+  var copy = document.createElement('div');
+  copy.className = 'placed-card';
+  copy.dataset.cardId = selectedId;
+  copy.innerHTML = card.innerHTML;
+  col.querySelector('.col-drop').appendChild(copy);
+
+  // Compteur colonne (total place, pas valide)
+  updateCnt(sysId);
+  updateScoreBar();
+
+  // Si la carte a ete placee dans tous ses systemes corrects ET rien d'incorrect, griser dans banque
+  checkCardDone(selectedId);
+
+  // Si section deja verifiee, reset la verification
+  if (verifiedOk[sysId] !== undefined) {
+    verifiedOk[sysId] = undefined;
+    col.classList.remove('v-ok', 'v-fail');
+    var fb = document.querySelector('.col-feedback[data-sys="' + sysId + '"]');
+    fb.className = 'col-feedback'; fb.textContent = '';
+    // Cacher les DDx
+    col.querySelectorAll('.ddx-group').forEach(function(g) { g.classList.remove('visible'); });
+    // Reset couleurs cartes
+    col.querySelectorAll('.placed-card').forEach(function(pc) {
+      pc.classList.remove('correct', 'incorrect');
+    });
+    col.querySelector('.btn-verify').textContent = 'Verifier cette section';
+  }
+
+  // Mise a jour indicateur
+  var sys = FLAGS_SYS[selectedId];
+  var allSysPlaced = sys.every(function(s) { return placedIn[selectedId][s] !== undefined; });
+  if (allSysPlaced) deselect();
+  else updateSelBar();
+});
+
+function checkCardDone(cardId) {
+  var sys = FLAGS_SYS[cardId];
+  // Grisee seulement si placee partout (correct ou non) — l'etudiant l'a utilisee
+  var allUsed = sys.every(function(s) { return placedIn[cardId][s] !== undefined; });
+  if (allUsed) {
+    var c = document.querySelector('.card[data-id="' + cardId + '"]');
+    if (c) { c.classList.remove('selected'); c.classList.add('done'); }
+  }
+}
+
+// ── Verification par section ──────────────────────────────────────────────────
+function verifySys(sysId) {
+  deselect();
+  var col = document.querySelector('.col[data-sys="' + sysId + '"]');
+  var fb  = document.querySelector('.col-feedback[data-sys="' + sysId + '"]');
+
+  // Cartes attendues
+  var expected = Object.keys(FLAGS_SYS).filter(function(id) {
+    return FLAGS_SYS[id].indexOf(sysId) !== -1;
+  });
+  var presentAndCorrect = Object.keys(placedIn).filter(function(id) {
+    return placedIn[id][sysId] === true;
+  });
+  var presentAndWrong = Object.keys(placedIn).filter(function(id) {
+    return placedIn[id][sysId] === false &&
+           Object.keys(placedIn[id]).some(function(s) { return s === sysId; });
+  });
+  var missing = expected.filter(function(id) {
+    return placedIn[id][sysId] !== true;
+  });
+
+  col.classList.remove('v-ok', 'v-fail', 'target-active');
+  fb.className = 'col-feedback show';
+
+  // Retirer les cartes incorrectes de la colonne et liberer la carte banque
+  col.querySelectorAll('.placed-card').forEach(function(pc) {
+    var cid = pc.dataset.cardId;
+    if (FLAGS_SYS[cid] && FLAGS_SYS[cid].indexOf(sysId) === -1) {
+      // Incorrect — retirer de la colonne et remettre disponible
+      pc.parentNode.removeChild(pc);
+      delete placedIn[cid][sysId];
+      // Remettre la carte banque disponible si elle etait grisee
+      var bankCard = document.querySelector('.card[data-id="' + cid + '"]');
+      if (bankCard) { bankCard.classList.remove('done'); }
+    } else {
+      // Correct — passer en vert
+      pc.classList.add('correct');
+    }
+  });
+
+  if (missing.length === 0 && presentAndWrong.length === 0) {
+    col.classList.add('v-ok');
+    fb.classList.add('ok');
+    fb.textContent = 'Parfait — ' + presentAndCorrect.length + ' red flag(s) correctement places.';
+    verifiedOk[sysId] = true;
+    col.querySelector('.btn-verify').textContent = 'Section validee';
+    revealDDxForSys(sysId, presentAndCorrect);
+    updateScoreBar();
+    checkFinish();
+
+  } else {
+    col.classList.add('v-fail');
+    fb.classList.add('fail');
+    var total_expected = expected.length;
+    var n_correct = presentAndCorrect.length;
+    var n_missing = missing.length;
+    var msg = n_correct + ' / ' + total_expected + ' correct(s).';
+    if (n_missing > 0) msg += ' Il manque encore ' + n_missing + ' red flag(s) — continue de chercher.';
+    fb.textContent = msg;
+    verifiedOk[sysId] = false;
+    revealDDxForSys(sysId, presentAndCorrect);
+  }
+}
+
+function revealDDxForSys(sysId, correctIds) {
+  var col = document.querySelector('.col[data-sys="' + sysId + '"]');
+  col.querySelectorAll('.ddx-group').forEach(function(grp) {
+    var flags = grp.dataset.flags ? grp.dataset.flags.split(',') : [];
+    var match = flags.some(function(f) { return correctIds.indexOf(f) !== -1; });
+    if (match) {
+      grp.classList.add('visible');
+      grp.querySelectorAll('.ddx-line').forEach(function(line) {
+        var fid = line.dataset.flag;
+        if (correctIds.indexOf(fid) !== -1) {
+          line.style.display = '';
+        } else {
+          line.style.display = 'none';
+        }
+      });
+    }
+  });
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function updateCnt(sysId) {
+  var n = document.querySelectorAll('.col-drop[data-sys="' + sysId + '"] .placed-card').length;
+  var el = document.querySelector('.col-cnt[data-sys="' + sysId + '"]');
+  if (el) el.textContent = n;
+}
+
+function updateScoreBar() {
+  var correct = 0;
+  Object.keys(placedIn).forEach(function(id) {
+    Object.keys(placedIn[id]).forEach(function(s) {
+      if (placedIn[id][s] === true) correct++;
+    });
+  });
+  document.getElementById('sn').textContent = correct;
+  document.getElementById('pf').style.width = Math.round(correct / totalPlaceable * 100) + '%';
+}
+
+function checkFinish() {
+  var sys = ['syncope','arythmie','choc','ic','hypo','avc','conv','abdo'];
+  if (sys.every(function(s) { return verifiedOk[s] === true; })) {
+    var f = document.getElementById('finish');
+    f.style.display = 'block';
+    setTimeout(function() { f.scrollIntoView({ behavior:'smooth', block:'nearest' }); }, 100);
+  }
+}
+
+// ── Reset ─────────────────────────────────────────────────────────────────────
+function resetAll() {
+  deselect();
+  Object.keys(placedIn).forEach(function(k) { placedIn[k] = {}; });
+  Object.keys(verifiedOk).forEach(function(k) { delete verifiedOk[k]; });
+
+  document.querySelectorAll('#bank .card').forEach(function(c) {
+    c.classList.remove('done','bad','selected');
+  });
+  document.querySelectorAll('.col-drop').forEach(function(d) { d.innerHTML = ''; });
+  document.querySelectorAll('.col').forEach(function(c) {
+    c.classList.remove('v-ok','v-fail','target-active');
+  });
+  document.querySelectorAll('.col-feedback').forEach(function(f) {
+    f.className = 'col-feedback'; f.textContent = '';
+  });
+  document.querySelectorAll('.ddx-group').forEach(function(g) { g.classList.remove('visible'); });
+  document.querySelectorAll('.ddx-flag-name').forEach(function(n) { n.classList.remove('wrong'); });
+  document.querySelectorAll('.ddx-line').forEach(function(l) { l.style.display = ''; });
+  document.querySelectorAll('.btn-verify').forEach(function(b) { b.textContent = 'Verifier cette section'; });
+  document.querySelectorAll('.col-cnt').forEach(function(el) { el.textContent = '0'; });
+  document.getElementById('sn').textContent = '0';
+  document.getElementById('pf').style.width = '0';
+  document.getElementById('finish').style.display = 'none';
+
+  var bank = document.getElementById('bank');
+  var cards = Array.from(bank.querySelectorAll('.card'));
+  for (var i = cards.length-1; i>0; i--) {
+    var j = Math.floor(Math.random()*(i+1));
+    bank.insertBefore(cards[j], cards[i]);
+    var t = cards[i]; cards[i] = cards[j]; cards[j] = t;
+  }
+}
+
+};
+</script>
+</body>
+</html>
