@@ -207,6 +207,148 @@ main { padding: 18px 22px; max-width: 1500px; margin: 0 auto; }
   background: rgba(39,174,96,0.12); border: 1px solid rgba(39,174,96,0.32);
   border-radius: 10px; color: #5de89a; font-size: 13px; line-height: 1.8;
 }
+
+/* ═══════════════════════════════════════════════════════
+   RONDE 2 — ASSOCIATIONS
+═══════════════════════════════════════════════════════ */
+
+#ronde2 { display: none; padding: 18px 22px; max-width: 1500px; margin: 0 auto; }
+
+#btn-ronde2 {
+  display: none;
+  margin: 22px auto 0;
+  padding: 12px 32px;
+  background: linear-gradient(135deg, #6c63ff, #a78bfa);
+  border: none; border-radius: 10px;
+  color: #fff; font-size: 15px; font-weight: 600;
+  cursor: pointer; letter-spacing: 0.02em;
+  box-shadow: 0 4px 18px rgba(108,99,255,0.35);
+  transition: all .2s;
+}
+#btn-ronde2:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(108,99,255,0.45); }
+
+/* Bannière transition */
+#ronde2-intro {
+  background: rgba(108,99,255,0.1); border: 1px solid rgba(108,99,255,0.25);
+  border-radius: 10px; padding: 14px 18px; margin-bottom: 20px;
+  font-size: 13px; color: #a09af0; line-height: 1.7;
+}
+#ronde2-intro b { color: #c4bfff; }
+
+/* Banque significations */
+#bank2 {
+  background: #181c2e; border: 1.5px solid rgba(255,255,255,0.08);
+  border-radius: 10px; padding: 11px;
+  display: flex; flex-wrap: wrap; gap: 7px;
+  min-height: 54px; margin-bottom: 20px;
+}
+
+/* Cartes signification */
+.sig-card {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 13px; border-radius: 16px;
+  font-size: 12px; cursor: pointer;
+  background: #1e2338; border: 1.5px solid rgba(255,255,255,0.13);
+  color: #dde1f7; white-space: nowrap;
+  transition: border-color .12s, background .12s, transform .1s, box-shadow .1s;
+}
+.sig-card:hover:not(.sig-done) { border-color: rgba(255,255,255,0.3); }
+.sig-card.sig-selected {
+  border-color: #f59e0b; background: rgba(245,158,11,0.18);
+  color: #fde68a; transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(245,158,11,0.35);
+}
+.sig-card.sig-done {
+  background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.06);
+  color: #3a4060; cursor: default;
+}
+
+/* Indicateur sélection ronde 2 */
+#sel-bar2 {
+  display: none; font-size: 12px; color: #fde68a;
+  margin-bottom: 12px; padding: 7px 12px;
+  background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25);
+  border-radius: 7px; align-items: center; gap: 8px;
+}
+#sel-bar2.visible { display: flex; }
+#sel-txt2 { flex: 1; }
+
+/* Colonnes ronde 2 — même grille */
+#grid2 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+@media (max-width: 1100px) { #grid2 { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 580px)  { #grid2 { grid-template-columns: 1fr; } }
+
+.col2 {
+  background: #181c2e; border: 1.5px solid rgba(255,255,255,0.08);
+  border-radius: 10px; overflow: hidden;
+  display: flex; flex-direction: column;
+  transition: border-color .15s, background .15s;
+}
+.col2.target2-active { border-color: #f59e0b; background: rgba(245,158,11,0.06); }
+.col2.target2-active:hover { background: rgba(245,158,11,0.1); }
+.col2.v2-ok   { border-color: #27ae60 !important; background: rgba(39,174,96,0.05) !important; }
+.col2.v2-fail { border-color: #e74c3c !important; background: rgba(231,76,60,0.04) !important; }
+
+.col2-hdr {
+  padding: 8px 11px; display: flex; align-items: center; gap: 8px;
+  font-size: 12.5px; font-weight: 600;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.col2-badge { font-size: 10px; font-weight: 700; font-family: monospace; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; }
+.col2-cnt { margin-left: auto; font-size: 11px; font-weight: 400; color: #3a4060; }
+
+/* Zone paires */
+.col2-pairs {
+  flex: 1; padding: 7px;
+  display: flex; flex-direction: column; gap: 5px;
+}
+
+/* Ligne red flag dans ronde 2 */
+.rf-row {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px; padding: 5px 9px;
+  cursor: pointer; transition: border-color .12s, background .12s;
+}
+.rf-row.target2-row { border-color: #f59e0b; background: rgba(245,158,11,0.08); }
+.rf-row-name { font-size: 11.5px; color: #7880a8; }
+.rf-row-sig {
+  font-size: 11px; color: #3a4060; margin-top: 2px;
+  font-style: italic; transition: color .25s;
+}
+.rf-row-sig.filled-ok   { color: #27ae60; font-style: normal; }
+.rf-row-sig.filled-fail { color: #e74c3c; font-style: normal; }
+
+/* Feedback ronde 2 */
+.col2-feedback {
+  display: none; padding: 5px 10px; font-size: 11.5px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.col2-feedback.show { display: block; }
+.col2-feedback.ok   { color: #5de89a; background: rgba(39,174,96,0.07); }
+.col2-feedback.fail { color: #f88080; background: rgba(231,76,60,0.06); }
+
+.btn2-verify {
+  margin: 5px 11px 7px;
+  padding: 6px 0; width: calc(100% - 22px);
+  background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3);
+  color: #fde68a; border-radius: 6px; font-size: 12px; cursor: pointer;
+  transition: all .15s;
+}
+.btn2-verify:hover { background: rgba(245,158,11,0.2); }
+.col2.v2-ok   .btn2-verify { background: rgba(39,174,96,0.12); border-color: rgba(39,174,96,0.35); color: #5de89a; pointer-events: none; }
+.col2.v2-fail .btn2-verify { background: rgba(231,76,60,0.1);  border-color: rgba(231,76,60,0.3);  color: #f88080; }
+
+/* Fin ronde 2 */
+#finish2 {
+  display: none; margin-top: 18px; padding: 14px 18px;
+  background: rgba(39,174,96,0.12); border: 1px solid rgba(39,174,96,0.32);
+  border-radius: 10px; color: #5de89a; font-size: 13px; line-height: 1.8;
+}
+
 </style>
 </head>
 <body>
@@ -578,6 +720,442 @@ main { padding: 18px 22px; max-width: 1500px; margin: 0 auto; }
     <strong>Toutes les sections sont verifiees et completes !</strong><br>
     A retenir : <strong>AEC, diaphorese, hypotension</strong> et <strong>tachycardie</strong> sont les grands transversaux. C'est le fil conducteur commun a tous les modules ERC2.
   </div>
+
+  <div style="text-align:center;">
+    <button id="btn-ronde2" onclick="startRonde2()">Ronde 2 — Associations &#8594;</button>
+  </div>
+
+<div id="ronde2">
+  <div id="ronde2-intro">
+    <b>Ronde 2 — Associations signification</b><br>
+    Les red flags sont maintenant en place. Clique une <b>signification clinique</b> (jaune), puis clique le <b>red flag correspondant</b> dans la bonne colonne pour les associer. Quand tu penses avoir complete une colonne, clique <b>Verifier</b>.
+  </div>
+
+  <div id="sel-bar2">
+    <span id="sel-txt2"></span>
+    <button class="btn-x" onclick="deselect2()">&#x2715;</button>
+  </div>
+
+  <div class="lbl">Significations a associer</div>
+  <div id="bank2">
+    <div class="sig-card" data-sig-id="s_c30_choc" data-card="c30" data-sys="choc">Compensation respiratoire a l'acidose metabolique</div>
+    <div class="sig-card" data-sig-id="s_c04_ic" data-card="c04" data-sys="ic">Contractilite myocardique effondree</div>
+    <div class="sig-card" data-sig-id="s_c05_arythmie" data-card="c05" data-sys="arythmie">Reponse ventriculaire rapide ou rythme ectopique</div>
+    <div class="sig-card" data-sig-id="s_c28_choc" data-card="c28" data-sys="choc">Hypovolemie aigue — HDH massive</div>
+    <div class="sig-card" data-sig-id="s_c19_avc" data-card="c19" data-sys="avc">Rupture anevrismale — HSA</div>
+    <div class="sig-card" data-sig-id="s_c29_ic" data-card="c29" data-sys="ic">SCA avec defaillance ventriculaire</div>
+    <div class="sig-card" data-sig-id="s_c11_choc" data-card="c11" data-sys="choc">Hypoperfusion peripherique — hypovolemie</div>
+    <div class="sig-card" data-sig-id="s_c27_abdo" data-card="c27" data-sys="abdo">Irritation peritoneale — abdomen chirurgical</div>
+    <div class="sig-card" data-sig-id="s_c20_avc" data-card="c20" data-sys="avc">Ischemie vertebro-basilaire — territoire posterieur</div>
+    <div class="sig-card" data-sig-id="s_c09_arythmie" data-card="c09" data-sys="arythmie">Activation sympathique — hypoperfusion</div>
+    <div class="sig-card" data-sig-id="s_c37_hypo" data-card="c37" data-sys="hypo">Premier signe adrenerglique — deficit en glucose</div>
+    <div class="sig-card" data-sig-id="s_c10_choc" data-card="c10" data-sys="choc">Vasoconstriction peripherique — redistribution du debit</div>
+    <div class="sig-card" data-sig-id="s_c08_avc" data-card="c08" data-sys="avc">Compression ou destruction du tissu cerebral</div>
+    <div class="sig-card" data-sig-id="s_c14_ic" data-card="c14" data-sys="ic">Surcharge pulmonaire — OAP</div>
+    <div class="sig-card" data-sig-id="s_c08_choc" data-card="c08" data-sys="choc">Hypoperfusion cerebrale</div>
+    <div class="sig-card" data-sig-id="s_c25_choc" data-card="c25" data-sys="choc">Rupture AAA — hemorragie retroperitoneale</div>
+    <div class="sig-card" data-sig-id="s_c08_hypo" data-card="c08" data-sys="hypo">Neuroglycopenie — cerveau prive de glucose</div>
+    <div class="sig-card" data-sig-id="s_c38_hypo" data-card="c38" data-sys="hypo">Presentation atypique — depression metabolique severe</div>
+    <div class="sig-card" data-sig-id="s_c10_ic" data-card="c10" data-sys="ic">Bas debit + vasoconstriction compensatrice</div>
+    <div class="sig-card" data-sig-id="s_c12_choc" data-card="c12" data-sys="choc">Debit cardiaque effondre</div>
+    <div class="sig-card" data-sig-id="s_c38_arythmie" data-card="c38" data-sys="arythmie">Stade preterminal pediatrique — risque ACR imminent</div>
+    <div class="sig-card" data-sig-id="s_c15_conv" data-card="c15" data-sys="conv">Apnee post-ictale — hypoventilation</div>
+    <div class="sig-card" data-sig-id="s_c17_hypo" data-card="c17" data-sys="hypo">Critere diagnostique — seuil d'intervention</div>
+    <div class="sig-card" data-sig-id="s_c36_avc" data-card="c36" data-sys="avc">HTIC severe — engagement cerebral imminent</div>
+    <div class="sig-card" data-sig-id="s_c31_syncope" data-card="c31" data-sys="syncope">Perte de tonus brutale — cardiaque ou convulsive</div>
+    <div class="sig-card" data-sig-id="s_c13_ic" data-card="c13" data-sys="ic">Inondation alveolaire — OAP</div>
+    <div class="sig-card" data-sig-id="s_c32_choc" data-card="c32" data-sys="choc">Grossesse ectopique rompue — hemorragie interne</div>
+    <div class="sig-card" data-sig-id="s_c37_conv" data-card="c37" data-sys="conv">Signe prodromique d'hypoglycemie convulsivante</div>
+    <div class="sig-card" data-sig-id="s_c02_arythmie" data-card="c02" data-sys="arythmie">Arythmie independante de la posture</div>
+    <div class="sig-card" data-sig-id="s_c25_abdo" data-card="c25" data-sys="abdo">Rupture AAA — urgence chirurgicale absolue</div>
+    <div class="sig-card" data-sig-id="s_c24_conv" data-card="c24" data-sys="conv">ACR post-ictal — transition silencieuse</div>
+    <div class="sig-card" data-sig-id="s_c08_conv" data-card="c08" data-sys="conv">Post-ictal prolonge ou status epilepticus</div>
+    <div class="sig-card" data-sig-id="s_c29_arythmie" data-card="c29" data-sys="arythmie">Ischemie concomitante ou embolie pulmonaire</div>
+    <div class="sig-card" data-sig-id="s_c01_syncope" data-card="c01" data-sys="syncope">Obstacle au debit a l'effort — arythmie ou obstruction</div>
+    <div class="sig-card" data-sig-id="s_c28_abdo" data-card="c28" data-sys="abdo">Source hemorragique active — HDH</div>
+    <div class="sig-card" data-sig-id="s_c09_ic" data-card="c09" data-sys="ic">Activation sympathique compensatrice</div>
+    <div class="sig-card" data-sig-id="s_c18_avc" data-card="c18" data-sys="avc">Deficit moteur / langage / facial — territoire anterieur</div>
+    <div class="sig-card" data-sig-id="s_c05_ic" data-card="c05" data-sys="ic">Compensation sympathique a la baisse de contractilite</div>
+    <div class="sig-card" data-sig-id="s_c22_conv" data-card="c22" data-sys="conv">Status epilepticus — seuil midazolam</div>
+    <div class="sig-card" data-sig-id="s_c04_choc" data-card="c04" data-sys="choc">Defaillance circulatoire decompensee</div>
+    <div class="sig-card" data-sig-id="s_c05_hypo" data-card="c05" data-sys="hypo">Reponse adrenerglique au deficit en glucose</div>
+    <div class="sig-card" data-sig-id="s_c23_conv" data-card="c23" data-sys="conv">Post-ictal pathologique — preparer midazolam</div>
+    <div class="sig-card" data-sig-id="s_c16_hypo" data-card="c16" data-sys="hypo">Neuroglycopenie focalisee — mime un AVC</div>
+    <div class="sig-card" data-sig-id="s_c15_ic" data-card="c15" data-sys="ic">Shunt intrapulmonaire — OAP</div>
+    <div class="sig-card" data-sig-id="s_c26_abdo" data-card="c26" data-sys="abdo">Souffrance viscerale sans irritation peritoneale — ischemie</div>
+    <div class="sig-card" data-sig-id="s_c05_choc" data-card="c05" data-sys="choc">Mecanisme compensatoire — maintien du debit cardiaque</div>
+    <div class="sig-card" data-sig-id="s_c17_conv" data-card="c17" data-sys="conv">Cause metabolique traitable — verifier systematiquement</div>
+    <div class="sig-card" data-sig-id="s_c34_abdo" data-card="c34" data-sys="abdo">Sang partiellement digere — HDH plus lente</div>
+    <div class="sig-card" data-sig-id="s_c03_syncope" data-card="c03" data-sys="syncope">Mecanisme cardiaque — pas neurologique</div>
+    <div class="sig-card" data-sig-id="s_c08_ic" data-card="c08" data-sys="ic">Bas debit cerebral — choc cardiogenique</div>
+    <div class="sig-card" data-sig-id="s_c09_hypo" data-card="c09" data-sys="hypo">Reponse adrenerglique au deficit glucidique</div>
+    <div class="sig-card" data-sig-id="s_c03_arythmie" data-card="c03" data-sys="arythmie">Arythmie transitoire auto-resolutive</div>
+    <div class="sig-card" data-sig-id="s_c30_ic" data-card="c30" data-sys="ic">Surcharge pulmonaire — detresse respiratoire</div>
+    <div class="sig-card" data-sig-id="s_c08_abdo" data-card="c08" data-sys="abdo">Decompensation hemodynamique — choc abdominal</div>
+    <div class="sig-card" data-sig-id="s_c16_avc" data-card="c16" data-sys="avc">Infarctus ou hemorragie — territoire vasculaire</div>
+    <div class="sig-card" data-sig-id="s_c04_arythmie" data-card="c04" data-sys="arythmie">Debit cardiaque insuffisant — rythme pathologique</div>
+    <div class="sig-card" data-sig-id="s_c33_abdo" data-card="c33" data-sys="abdo">Source haute (> ligament de Treitz) — piege classique</div>
+    <div class="sig-card" data-sig-id="s_c06_arythmie" data-card="c06" data-sys="arythmie">BAV ou dysfonction sinusale — debit insuffisant</div>
+    <div class="sig-card" data-sig-id="s_c35_abdo" data-card="c35" data-sys="abdo">HDB significative ou HDH tres abondante (transit rapide)</div>
+    <div class="sig-card" data-sig-id="s_c07_choc" data-card="c07" data-sys="choc">Indice de choc positif</div>
+    <div class="sig-card" data-sig-id="s_c09_choc" data-card="c09" data-sys="choc">Vasoconstriction reflexe — activation sympathique</div>
+    <div class="sig-card" data-sig-id="s_c21_avc" data-card="c21" data-sys="avc">HTIC — compensation reflexe avant engagement cerebral</div>
+    <div class="sig-card" data-sig-id="s_c02_syncope" data-card="c02" data-sys="syncope">Exclut vasovagale et orthostatique — origine cardiaque</div>
+    <div class="sig-card" data-sig-id="s_c06_choc" data-card="c06" data-sys="choc">Choc bradycardique — effondrement du debit</div>
+  </div>
+
+  <div id="grid2">
+    <div class="col2" data-sys="syncope">
+      <div class="col2-hdr" style="background:rgba(167,139,250,0.1)">
+        <span class="col2-badge" style="background:rgba(167,139,250,0.18);color:#a78bfa">SYN</span>
+        <span style="color:#a78bfa">Syncope / Lipothymie</span>
+        <span class="col2-cnt" data-sys="syncope">0/4</span>
+      </div>
+      <div class="col2-pairs" id="pairs-syncope">
+        <div class="rf-row" id="rfrow-c01-syncope" data-card="c01" data-sys="syncope">
+          <div class="rf-row-name" id="rfname-c01-syncope">...</div>
+          <div class="rf-row-sig" id="rfsig-c01-syncope">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c02-syncope" data-card="c02" data-sys="syncope">
+          <div class="rf-row-name" id="rfname-c02-syncope">...</div>
+          <div class="rf-row-sig" id="rfsig-c02-syncope">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c03-syncope" data-card="c03" data-sys="syncope">
+          <div class="rf-row-name" id="rfname-c03-syncope">...</div>
+          <div class="rf-row-sig" id="rfsig-c03-syncope">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c31-syncope" data-card="c31" data-sys="syncope">
+          <div class="rf-row-name" id="rfname-c31-syncope">...</div>
+          <div class="rf-row-sig" id="rfsig-c31-syncope">Associer une signification...</div>
+        </div>
+      </div>
+      <button class="btn2-verify" data-sys="syncope">Verifier cette section</button>
+      <div class="col2-feedback" data-sys="syncope"></div>
+    </div>
+    <div class="col2" data-sys="arythmie">
+      <div class="col2-hdr" style="background:rgba(96,165,250,0.1)">
+        <span class="col2-badge" style="background:rgba(96,165,250,0.18);color:#60a5fa">ARY</span>
+        <span style="color:#60a5fa">Arythmies</span>
+        <span class="col2-cnt" data-sys="arythmie">0/8</span>
+      </div>
+      <div class="col2-pairs" id="pairs-arythmie">
+        <div class="rf-row" id="rfrow-c02-arythmie" data-card="c02" data-sys="arythmie">
+          <div class="rf-row-name" id="rfname-c02-arythmie">...</div>
+          <div class="rf-row-sig" id="rfsig-c02-arythmie">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c03-arythmie" data-card="c03" data-sys="arythmie">
+          <div class="rf-row-name" id="rfname-c03-arythmie">...</div>
+          <div class="rf-row-sig" id="rfsig-c03-arythmie">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c04-arythmie" data-card="c04" data-sys="arythmie">
+          <div class="rf-row-name" id="rfname-c04-arythmie">...</div>
+          <div class="rf-row-sig" id="rfsig-c04-arythmie">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c05-arythmie" data-card="c05" data-sys="arythmie">
+          <div class="rf-row-name" id="rfname-c05-arythmie">...</div>
+          <div class="rf-row-sig" id="rfsig-c05-arythmie">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c06-arythmie" data-card="c06" data-sys="arythmie">
+          <div class="rf-row-name" id="rfname-c06-arythmie">...</div>
+          <div class="rf-row-sig" id="rfsig-c06-arythmie">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c09-arythmie" data-card="c09" data-sys="arythmie">
+          <div class="rf-row-name" id="rfname-c09-arythmie">...</div>
+          <div class="rf-row-sig" id="rfsig-c09-arythmie">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c29-arythmie" data-card="c29" data-sys="arythmie">
+          <div class="rf-row-name" id="rfname-c29-arythmie">...</div>
+          <div class="rf-row-sig" id="rfsig-c29-arythmie">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c38-arythmie" data-card="c38" data-sys="arythmie">
+          <div class="rf-row-name" id="rfname-c38-arythmie">...</div>
+          <div class="rf-row-sig" id="rfsig-c38-arythmie">Associer une signification...</div>
+        </div>
+      </div>
+      <button class="btn2-verify" data-sys="arythmie">Verifier cette section</button>
+      <div class="col2-feedback" data-sys="arythmie"></div>
+    </div>
+    <div class="col2" data-sys="choc">
+      <div class="col2-hdr" style="background:rgba(248,113,113,0.1)">
+        <span class="col2-badge" style="background:rgba(248,113,113,0.18);color:#f87171">CHC</span>
+        <span style="color:#f87171">Chocs</span>
+        <span class="col2-cnt" data-sys="choc">0/13</span>
+      </div>
+      <div class="col2-pairs" id="pairs-choc">
+        <div class="rf-row" id="rfrow-c04-choc" data-card="c04" data-sys="choc">
+          <div class="rf-row-name" id="rfname-c04-choc">...</div>
+          <div class="rf-row-sig" id="rfsig-c04-choc">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c05-choc" data-card="c05" data-sys="choc">
+          <div class="rf-row-name" id="rfname-c05-choc">...</div>
+          <div class="rf-row-sig" id="rfsig-c05-choc">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c06-choc" data-card="c06" data-sys="choc">
+          <div class="rf-row-name" id="rfname-c06-choc">...</div>
+          <div class="rf-row-sig" id="rfsig-c06-choc">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c07-choc" data-card="c07" data-sys="choc">
+          <div class="rf-row-name" id="rfname-c07-choc">...</div>
+          <div class="rf-row-sig" id="rfsig-c07-choc">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c08-choc" data-card="c08" data-sys="choc">
+          <div class="rf-row-name" id="rfname-c08-choc">...</div>
+          <div class="rf-row-sig" id="rfsig-c08-choc">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c09-choc" data-card="c09" data-sys="choc">
+          <div class="rf-row-name" id="rfname-c09-choc">...</div>
+          <div class="rf-row-sig" id="rfsig-c09-choc">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c10-choc" data-card="c10" data-sys="choc">
+          <div class="rf-row-name" id="rfname-c10-choc">...</div>
+          <div class="rf-row-sig" id="rfsig-c10-choc">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c11-choc" data-card="c11" data-sys="choc">
+          <div class="rf-row-name" id="rfname-c11-choc">...</div>
+          <div class="rf-row-sig" id="rfsig-c11-choc">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c12-choc" data-card="c12" data-sys="choc">
+          <div class="rf-row-name" id="rfname-c12-choc">...</div>
+          <div class="rf-row-sig" id="rfsig-c12-choc">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c25-choc" data-card="c25" data-sys="choc">
+          <div class="rf-row-name" id="rfname-c25-choc">...</div>
+          <div class="rf-row-sig" id="rfsig-c25-choc">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c28-choc" data-card="c28" data-sys="choc">
+          <div class="rf-row-name" id="rfname-c28-choc">...</div>
+          <div class="rf-row-sig" id="rfsig-c28-choc">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c30-choc" data-card="c30" data-sys="choc">
+          <div class="rf-row-name" id="rfname-c30-choc">...</div>
+          <div class="rf-row-sig" id="rfsig-c30-choc">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c32-choc" data-card="c32" data-sys="choc">
+          <div class="rf-row-name" id="rfname-c32-choc">...</div>
+          <div class="rf-row-sig" id="rfsig-c32-choc">Associer une signification...</div>
+        </div>
+      </div>
+      <button class="btn2-verify" data-sys="choc">Verifier cette section</button>
+      <div class="col2-feedback" data-sys="choc"></div>
+    </div>
+    <div class="col2" data-sys="ic">
+      <div class="col2-hdr" style="background:rgba(52,211,153,0.1)">
+        <span class="col2-badge" style="background:rgba(52,211,153,0.18);color:#34d399">I.C.</span>
+        <span style="color:#34d399">Insuffisance cardiaque</span>
+        <span class="col2-cnt" data-sys="ic">0/10</span>
+      </div>
+      <div class="col2-pairs" id="pairs-ic">
+        <div class="rf-row" id="rfrow-c04-ic" data-card="c04" data-sys="ic">
+          <div class="rf-row-name" id="rfname-c04-ic">...</div>
+          <div class="rf-row-sig" id="rfsig-c04-ic">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c05-ic" data-card="c05" data-sys="ic">
+          <div class="rf-row-name" id="rfname-c05-ic">...</div>
+          <div class="rf-row-sig" id="rfsig-c05-ic">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c08-ic" data-card="c08" data-sys="ic">
+          <div class="rf-row-name" id="rfname-c08-ic">...</div>
+          <div class="rf-row-sig" id="rfsig-c08-ic">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c09-ic" data-card="c09" data-sys="ic">
+          <div class="rf-row-name" id="rfname-c09-ic">...</div>
+          <div class="rf-row-sig" id="rfsig-c09-ic">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c10-ic" data-card="c10" data-sys="ic">
+          <div class="rf-row-name" id="rfname-c10-ic">...</div>
+          <div class="rf-row-sig" id="rfsig-c10-ic">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c13-ic" data-card="c13" data-sys="ic">
+          <div class="rf-row-name" id="rfname-c13-ic">...</div>
+          <div class="rf-row-sig" id="rfsig-c13-ic">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c14-ic" data-card="c14" data-sys="ic">
+          <div class="rf-row-name" id="rfname-c14-ic">...</div>
+          <div class="rf-row-sig" id="rfsig-c14-ic">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c15-ic" data-card="c15" data-sys="ic">
+          <div class="rf-row-name" id="rfname-c15-ic">...</div>
+          <div class="rf-row-sig" id="rfsig-c15-ic">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c29-ic" data-card="c29" data-sys="ic">
+          <div class="rf-row-name" id="rfname-c29-ic">...</div>
+          <div class="rf-row-sig" id="rfsig-c29-ic">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c30-ic" data-card="c30" data-sys="ic">
+          <div class="rf-row-name" id="rfname-c30-ic">...</div>
+          <div class="rf-row-sig" id="rfsig-c30-ic">Associer une signification...</div>
+        </div>
+      </div>
+      <button class="btn2-verify" data-sys="ic">Verifier cette section</button>
+      <div class="col2-feedback" data-sys="ic"></div>
+    </div>
+    <div class="col2" data-sys="hypo">
+      <div class="col2-hdr" style="background:rgba(251,191,36,0.1)">
+        <span class="col2-badge" style="background:rgba(251,191,36,0.18);color:#fbbf24">HYP</span>
+        <span style="color:#fbbf24">Hypoglycemie</span>
+        <span class="col2-cnt" data-sys="hypo">0/7</span>
+      </div>
+      <div class="col2-pairs" id="pairs-hypo">
+        <div class="rf-row" id="rfrow-c05-hypo" data-card="c05" data-sys="hypo">
+          <div class="rf-row-name" id="rfname-c05-hypo">...</div>
+          <div class="rf-row-sig" id="rfsig-c05-hypo">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c08-hypo" data-card="c08" data-sys="hypo">
+          <div class="rf-row-name" id="rfname-c08-hypo">...</div>
+          <div class="rf-row-sig" id="rfsig-c08-hypo">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c09-hypo" data-card="c09" data-sys="hypo">
+          <div class="rf-row-name" id="rfname-c09-hypo">...</div>
+          <div class="rf-row-sig" id="rfsig-c09-hypo">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c16-hypo" data-card="c16" data-sys="hypo">
+          <div class="rf-row-name" id="rfname-c16-hypo">...</div>
+          <div class="rf-row-sig" id="rfsig-c16-hypo">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c17-hypo" data-card="c17" data-sys="hypo">
+          <div class="rf-row-name" id="rfname-c17-hypo">...</div>
+          <div class="rf-row-sig" id="rfsig-c17-hypo">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c37-hypo" data-card="c37" data-sys="hypo">
+          <div class="rf-row-name" id="rfname-c37-hypo">...</div>
+          <div class="rf-row-sig" id="rfsig-c37-hypo">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c38-hypo" data-card="c38" data-sys="hypo">
+          <div class="rf-row-name" id="rfname-c38-hypo">...</div>
+          <div class="rf-row-sig" id="rfsig-c38-hypo">Associer une signification...</div>
+        </div>
+      </div>
+      <button class="btn2-verify" data-sys="hypo">Verifier cette section</button>
+      <div class="col2-feedback" data-sys="hypo"></div>
+    </div>
+    <div class="col2" data-sys="avc">
+      <div class="col2-hdr" style="background:rgba(134,239,172,0.1)">
+        <span class="col2-badge" style="background:rgba(134,239,172,0.18);color:#86efac">AVC</span>
+        <span style="color:#86efac">AVC aigu</span>
+        <span class="col2-cnt" data-sys="avc">0/7</span>
+      </div>
+      <div class="col2-pairs" id="pairs-avc">
+        <div class="rf-row" id="rfrow-c08-avc" data-card="c08" data-sys="avc">
+          <div class="rf-row-name" id="rfname-c08-avc">...</div>
+          <div class="rf-row-sig" id="rfsig-c08-avc">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c16-avc" data-card="c16" data-sys="avc">
+          <div class="rf-row-name" id="rfname-c16-avc">...</div>
+          <div class="rf-row-sig" id="rfsig-c16-avc">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c18-avc" data-card="c18" data-sys="avc">
+          <div class="rf-row-name" id="rfname-c18-avc">...</div>
+          <div class="rf-row-sig" id="rfsig-c18-avc">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c19-avc" data-card="c19" data-sys="avc">
+          <div class="rf-row-name" id="rfname-c19-avc">...</div>
+          <div class="rf-row-sig" id="rfsig-c19-avc">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c20-avc" data-card="c20" data-sys="avc">
+          <div class="rf-row-name" id="rfname-c20-avc">...</div>
+          <div class="rf-row-sig" id="rfsig-c20-avc">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c21-avc" data-card="c21" data-sys="avc">
+          <div class="rf-row-name" id="rfname-c21-avc">...</div>
+          <div class="rf-row-sig" id="rfsig-c21-avc">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c36-avc" data-card="c36" data-sys="avc">
+          <div class="rf-row-name" id="rfname-c36-avc">...</div>
+          <div class="rf-row-sig" id="rfsig-c36-avc">Associer une signification...</div>
+        </div>
+      </div>
+      <button class="btn2-verify" data-sys="avc">Verifier cette section</button>
+      <div class="col2-feedback" data-sys="avc"></div>
+    </div>
+    <div class="col2" data-sys="conv">
+      <div class="col2-hdr" style="background:rgba(249,168,212,0.1)">
+        <span class="col2-badge" style="background:rgba(249,168,212,0.18);color:#f9a8d4">CNV</span>
+        <span style="color:#f9a8d4">Convulsions</span>
+        <span class="col2-cnt" data-sys="conv">0/7</span>
+      </div>
+      <div class="col2-pairs" id="pairs-conv">
+        <div class="rf-row" id="rfrow-c08-conv" data-card="c08" data-sys="conv">
+          <div class="rf-row-name" id="rfname-c08-conv">...</div>
+          <div class="rf-row-sig" id="rfsig-c08-conv">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c15-conv" data-card="c15" data-sys="conv">
+          <div class="rf-row-name" id="rfname-c15-conv">...</div>
+          <div class="rf-row-sig" id="rfsig-c15-conv">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c17-conv" data-card="c17" data-sys="conv">
+          <div class="rf-row-name" id="rfname-c17-conv">...</div>
+          <div class="rf-row-sig" id="rfsig-c17-conv">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c22-conv" data-card="c22" data-sys="conv">
+          <div class="rf-row-name" id="rfname-c22-conv">...</div>
+          <div class="rf-row-sig" id="rfsig-c22-conv">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c23-conv" data-card="c23" data-sys="conv">
+          <div class="rf-row-name" id="rfname-c23-conv">...</div>
+          <div class="rf-row-sig" id="rfsig-c23-conv">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c24-conv" data-card="c24" data-sys="conv">
+          <div class="rf-row-name" id="rfname-c24-conv">...</div>
+          <div class="rf-row-sig" id="rfsig-c24-conv">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c37-conv" data-card="c37" data-sys="conv">
+          <div class="rf-row-name" id="rfname-c37-conv">...</div>
+          <div class="rf-row-sig" id="rfsig-c37-conv">Associer une signification...</div>
+        </div>
+      </div>
+      <button class="btn2-verify" data-sys="conv">Verifier cette section</button>
+      <div class="col2-feedback" data-sys="conv"></div>
+    </div>
+    <div class="col2" data-sys="abdo">
+      <div class="col2-hdr" style="background:rgba(251,146,60,0.1)">
+        <span class="col2-badge" style="background:rgba(251,146,60,0.18);color:#fb923c">ABD</span>
+        <span style="color:#fb923c">Douleur abdominale / HDH</span>
+        <span class="col2-cnt" data-sys="abdo">0/8</span>
+      </div>
+      <div class="col2-pairs" id="pairs-abdo">
+        <div class="rf-row" id="rfrow-c08-abdo" data-card="c08" data-sys="abdo">
+          <div class="rf-row-name" id="rfname-c08-abdo">...</div>
+          <div class="rf-row-sig" id="rfsig-c08-abdo">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c25-abdo" data-card="c25" data-sys="abdo">
+          <div class="rf-row-name" id="rfname-c25-abdo">...</div>
+          <div class="rf-row-sig" id="rfsig-c25-abdo">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c26-abdo" data-card="c26" data-sys="abdo">
+          <div class="rf-row-name" id="rfname-c26-abdo">...</div>
+          <div class="rf-row-sig" id="rfsig-c26-abdo">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c27-abdo" data-card="c27" data-sys="abdo">
+          <div class="rf-row-name" id="rfname-c27-abdo">...</div>
+          <div class="rf-row-sig" id="rfsig-c27-abdo">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c28-abdo" data-card="c28" data-sys="abdo">
+          <div class="rf-row-name" id="rfname-c28-abdo">...</div>
+          <div class="rf-row-sig" id="rfsig-c28-abdo">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c33-abdo" data-card="c33" data-sys="abdo">
+          <div class="rf-row-name" id="rfname-c33-abdo">...</div>
+          <div class="rf-row-sig" id="rfsig-c33-abdo">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c34-abdo" data-card="c34" data-sys="abdo">
+          <div class="rf-row-name" id="rfname-c34-abdo">...</div>
+          <div class="rf-row-sig" id="rfsig-c34-abdo">Associer une signification...</div>
+        </div>
+        <div class="rf-row" id="rfrow-c35-abdo" data-card="c35" data-sys="abdo">
+          <div class="rf-row-name" id="rfname-c35-abdo">...</div>
+          <div class="rf-row-sig" id="rfsig-c35-abdo">Associer une signification...</div>
+        </div>
+      </div>
+      <button class="btn2-verify" data-sys="abdo">Verifier cette section</button>
+      <div class="col2-feedback" data-sys="abdo"></div>
+    </div>
+  </div>
+
+  <div id="finish2">
+    <strong>Toutes les associations sont validees !</strong><br>
+    Tu maitrises maintenant non seulement la <em>reconnaissance</em> des red flags, mais aussi leur <em>signification clinique</em> selon le contexte. C'est la base du raisonnement clinique en soins prehospitaliers.
+  </div>
+</div>
 </main>
 
 <script>
@@ -650,7 +1228,10 @@ document.getElementById('grid').addEventListener('click', function(e) {
   var sysId = col.dataset.sys;
 
   // Deja place dans cette colonne
-  if (placedIn[selectedId][sysId] !== undefined) { deselect(); return; }
+  // Si deja place correctement ici, ignorer — sinon permettre de replacer
+  if (placedIn[selectedId][sysId] === true) { deselect(); return; }
+  // Si deja place incorrectement ici (ne devrait plus arriver apres nettoyage), ignorer
+  if (placedIn[selectedId][sysId] === false) { deselect(); return; }
 
   var card = document.querySelector('.card[data-id="' + selectedId + '"]');
   if (!card) return;
@@ -697,11 +1278,16 @@ document.getElementById('grid').addEventListener('click', function(e) {
 
 function checkCardDone(cardId) {
   var sys = FLAGS_SYS[cardId];
-  // Grisee seulement si placee partout (correct ou non) — l'etudiant l'a utilisee
-  var allUsed = sys.every(function(s) { return placedIn[cardId][s] !== undefined; });
-  if (allUsed) {
-    var c = document.querySelector('.card[data-id="' + cardId + '"]');
-    if (c) { c.classList.remove('selected'); c.classList.add('done'); }
+  var c = document.querySelector('.card[data-id="' + cardId + '"]');
+  if (!c) return;
+  // Griser seulement si tous les systemes sont correctement places (true)
+  // Une carte avec un mauvais placement reste disponible pour etre replacee
+  var allCorrect = sys.every(function(s) { return placedIn[cardId][s] === true; });
+  if (allCorrect) {
+    c.classList.remove('selected');
+    c.classList.add('done');
+  } else {
+    c.classList.remove('done');
   }
 }
 
@@ -736,9 +1322,14 @@ function verifySys(sysId) {
       // Incorrect — retirer de la colonne et remettre disponible
       pc.parentNode.removeChild(pc);
       delete placedIn[cid][sysId];
-      // Remettre la carte banque disponible si elle etait grisee
+      // Recalculer si la carte doit rester grisee ou redevenir disponible
       var bankCard = document.querySelector('.card[data-id="' + cid + '"]');
-      if (bankCard) { bankCard.classList.remove('done'); }
+      if (bankCard) {
+        // Verifier si tous les systemes corrects sont encore places
+        var cardSys = FLAGS_SYS[cid];
+        var stillDone = cardSys.every(function(s) { return placedIn[cid][s] === true; });
+        if (!stillDone) { bankCard.classList.remove('done'); }
+      }
     } else {
       // Correct — passer en vert
       pc.classList.add('correct');
@@ -811,6 +1402,7 @@ function checkFinish() {
   if (sys.every(function(s) { return verifiedOk[s] === true; })) {
     var f = document.getElementById('finish');
     f.style.display = 'block';
+    document.getElementById('btn-ronde2').style.display = 'block';
     setTimeout(function() { f.scrollIntoView({ behavior:'smooth', block:'nearest' }); }, 100);
   }
 }
@@ -846,6 +1438,285 @@ function resetAll() {
     var j = Math.floor(Math.random()*(i+1));
     bank.insertBefore(cards[j], cards[i]);
     var t = cards[i]; cards[i] = cards[j]; cards[j] = t;
+  }
+}
+
+
+// ═══════════════════════════════════════════════
+// RONDE 2
+// ═══════════════════════════════════════════════
+var PAIRS = {
+  "s_c01_syncope": { card:"c01", sys:"syncope", sig:"Obstacle au debit a l'effort — arythmie ou obstruction" },
+  "s_c02_syncope": { card:"c02", sys:"syncope", sig:"Exclut vasovagale et orthostatique — origine cardiaque" },
+  "s_c03_syncope": { card:"c03", sys:"syncope", sig:"Mecanisme cardiaque — pas neurologique" },
+  "s_c31_syncope": { card:"c31", sys:"syncope", sig:"Perte de tonus brutale — cardiaque ou convulsive" },
+  "s_c02_arythmie": { card:"c02", sys:"arythmie", sig:"Arythmie independante de la posture" },
+  "s_c03_arythmie": { card:"c03", sys:"arythmie", sig:"Arythmie transitoire auto-resolutive" },
+  "s_c04_arythmie": { card:"c04", sys:"arythmie", sig:"Debit cardiaque insuffisant — rythme pathologique" },
+  "s_c05_arythmie": { card:"c05", sys:"arythmie", sig:"Reponse ventriculaire rapide ou rythme ectopique" },
+  "s_c06_arythmie": { card:"c06", sys:"arythmie", sig:"BAV ou dysfonction sinusale — debit insuffisant" },
+  "s_c09_arythmie": { card:"c09", sys:"arythmie", sig:"Activation sympathique — hypoperfusion" },
+  "s_c29_arythmie": { card:"c29", sys:"arythmie", sig:"Ischemie concomitante ou embolie pulmonaire" },
+  "s_c38_arythmie": { card:"c38", sys:"arythmie", sig:"Stade preterminal pediatrique — risque ACR imminent" },
+  "s_c04_choc": { card:"c04", sys:"choc", sig:"Defaillance circulatoire decompensee" },
+  "s_c05_choc": { card:"c05", sys:"choc", sig:"Mecanisme compensatoire — maintien du debit cardiaque" },
+  "s_c06_choc": { card:"c06", sys:"choc", sig:"Choc bradycardique — effondrement du debit" },
+  "s_c07_choc": { card:"c07", sys:"choc", sig:"Indice de choc positif" },
+  "s_c08_choc": { card:"c08", sys:"choc", sig:"Hypoperfusion cerebrale" },
+  "s_c09_choc": { card:"c09", sys:"choc", sig:"Vasoconstriction reflexe — activation sympathique" },
+  "s_c10_choc": { card:"c10", sys:"choc", sig:"Vasoconstriction peripherique — redistribution du debit" },
+  "s_c11_choc": { card:"c11", sys:"choc", sig:"Hypoperfusion peripherique — hypovolemie" },
+  "s_c12_choc": { card:"c12", sys:"choc", sig:"Debit cardiaque effondre" },
+  "s_c25_choc": { card:"c25", sys:"choc", sig:"Rupture AAA — hemorragie retroperitoneale" },
+  "s_c28_choc": { card:"c28", sys:"choc", sig:"Hypovolemie aigue — HDH massive" },
+  "s_c30_choc": { card:"c30", sys:"choc", sig:"Compensation respiratoire a l'acidose metabolique" },
+  "s_c32_choc": { card:"c32", sys:"choc", sig:"Grossesse ectopique rompue — hemorragie interne" },
+  "s_c04_ic": { card:"c04", sys:"ic", sig:"Contractilite myocardique effondree" },
+  "s_c05_ic": { card:"c05", sys:"ic", sig:"Compensation sympathique a la baisse de contractilite" },
+  "s_c08_ic": { card:"c08", sys:"ic", sig:"Bas debit cerebral — choc cardiogenique" },
+  "s_c09_ic": { card:"c09", sys:"ic", sig:"Activation sympathique compensatrice" },
+  "s_c10_ic": { card:"c10", sys:"ic", sig:"Bas debit + vasoconstriction compensatrice" },
+  "s_c13_ic": { card:"c13", sys:"ic", sig:"Inondation alveolaire — OAP" },
+  "s_c14_ic": { card:"c14", sys:"ic", sig:"Surcharge pulmonaire — OAP" },
+  "s_c15_ic": { card:"c15", sys:"ic", sig:"Shunt intrapulmonaire — OAP" },
+  "s_c29_ic": { card:"c29", sys:"ic", sig:"SCA avec defaillance ventriculaire" },
+  "s_c30_ic": { card:"c30", sys:"ic", sig:"Surcharge pulmonaire — detresse respiratoire" },
+  "s_c05_hypo": { card:"c05", sys:"hypo", sig:"Reponse adrenerglique au deficit en glucose" },
+  "s_c08_hypo": { card:"c08", sys:"hypo", sig:"Neuroglycopenie — cerveau prive de glucose" },
+  "s_c09_hypo": { card:"c09", sys:"hypo", sig:"Reponse adrenerglique au deficit glucidique" },
+  "s_c16_hypo": { card:"c16", sys:"hypo", sig:"Neuroglycopenie focalisee — mime un AVC" },
+  "s_c17_hypo": { card:"c17", sys:"hypo", sig:"Critere diagnostique — seuil d'intervention" },
+  "s_c37_hypo": { card:"c37", sys:"hypo", sig:"Premier signe adrenerglique — deficit en glucose" },
+  "s_c38_hypo": { card:"c38", sys:"hypo", sig:"Presentation atypique — depression metabolique severe" },
+  "s_c08_avc": { card:"c08", sys:"avc", sig:"Compression ou destruction du tissu cerebral" },
+  "s_c16_avc": { card:"c16", sys:"avc", sig:"Infarctus ou hemorragie — territoire vasculaire" },
+  "s_c18_avc": { card:"c18", sys:"avc", sig:"Deficit moteur / langage / facial — territoire anterieur" },
+  "s_c19_avc": { card:"c19", sys:"avc", sig:"Rupture anevrismale — HSA" },
+  "s_c20_avc": { card:"c20", sys:"avc", sig:"Ischemie vertebro-basilaire — territoire posterieur" },
+  "s_c21_avc": { card:"c21", sys:"avc", sig:"HTIC — compensation reflexe avant engagement cerebral" },
+  "s_c36_avc": { card:"c36", sys:"avc", sig:"HTIC severe — engagement cerebral imminent" },
+  "s_c08_conv": { card:"c08", sys:"conv", sig:"Post-ictal prolonge ou status epilepticus" },
+  "s_c15_conv": { card:"c15", sys:"conv", sig:"Apnee post-ictale — hypoventilation" },
+  "s_c17_conv": { card:"c17", sys:"conv", sig:"Cause metabolique traitable — verifier systematiquement" },
+  "s_c22_conv": { card:"c22", sys:"conv", sig:"Status epilepticus — seuil midazolam" },
+  "s_c23_conv": { card:"c23", sys:"conv", sig:"Post-ictal pathologique — preparer midazolam" },
+  "s_c24_conv": { card:"c24", sys:"conv", sig:"ACR post-ictal — transition silencieuse" },
+  "s_c37_conv": { card:"c37", sys:"conv", sig:"Signe prodromique d'hypoglycemie convulsivante" },
+  "s_c08_abdo": { card:"c08", sys:"abdo", sig:"Decompensation hemodynamique — choc abdominal" },
+  "s_c25_abdo": { card:"c25", sys:"abdo", sig:"Rupture AAA — urgence chirurgicale absolue" },
+  "s_c26_abdo": { card:"c26", sys:"abdo", sig:"Souffrance viscerale sans irritation peritoneale — ischemie" },
+  "s_c27_abdo": { card:"c27", sys:"abdo", sig:"Irritation peritoneale — abdomen chirurgical" },
+  "s_c28_abdo": { card:"c28", sys:"abdo", sig:"Source hemorragique active — HDH" },
+  "s_c33_abdo": { card:"c33", sys:"abdo", sig:"Source haute (> ligament de Treitz) — piege classique" },
+  "s_c34_abdo": { card:"c34", sys:"abdo", sig:"Sang partiellement digere — HDH plus lente" },
+  "s_c35_abdo": { card:"c35", sys:"abdo", sig:"HDB significative ou HDH tres abondante (transit rapide)" },
+};
+var CARD_NAMES = {
+  "c01": "Syncope a l'effort",
+  "c02": "Syncope en position couchee",
+  "c03": "Debut et fin soudaine de la perte de conscience",
+  "c04": "Hypotension",
+  "c05": "Tachycardie",
+  "c06": "Bradycardie + signes d'hypoperfusion",
+  "c07": "FC > TAS (adulte)",
+  "c08": "AEC / confusion / agitation",
+  "c09": "Diaphorese",
+  "c10": "Peau marbree / pale / cyanosee",
+  "c11": "Remplissage capillaire > 2 s",
+  "c12": "Pouls peripheriques filants",
+  "c13": "Dyspnee au repos",
+  "c14": "Crepitants bilateraux",
+  "c15": "SpO2 basse (hypoxemie)",
+  "c16": "Dysfonction neurologique focale",
+  "c17": "Glycemie < 4 mmol/L",
+  "c18": "Cincinnati >= 1/3",
+  "c19": "Cephalee en coup de tonnerre",
+  "c20": "Ataxie + vertiges + diplopie",
+  "c21": "Triade de Cushing",
+  "c22": "Convulsions >= 5 min OU repetitives sans retour etat de base",
+  "c23": "Absence de retour a l'etat de base post-ictal",
+  "c24": "Absence de pouls a la resolution",
+  "c25": "Masse pulsatile + douleur irradiant au dos",
+  "c26": "Douleur disproportionnee p/r a l'examen physique",
+  "c27": "Distension abdominale + defense / rigidite",
+  "c28": "Hematemese / melena / rectorragie + instabilite",
+  "c29": "DRS associee au trouble de rythme ou dyspnee",
+  "c30": "Tachypnee importante",
+  "c31": "Syncope + blessure associee",
+  "c32": "Femme en age de procreer + douleur abdo basse subite",
+  "c33": "Melena (selles noires, goudronneuses)",
+  "c34": "Hematemese en marc de cafe",
+  "c35": "Rectorragie franche + instabilite hemodynamique",
+  "c36": "AEC + vomissements en jet + anisocorie",
+  "c37": "Tremblements",
+  "c38": "Pediatrie : bradycardie + hypothermie + pauses respiratoires",
+};
+
+var placedSig = {};   // sigId -> bool (correct=true)
+var verified2 = {};   // sysId -> bool
+var selectedSig = null;
+var r2started = false;
+
+window.startRonde2 = function() {
+  document.getElementById('btn-ronde2').style.display = 'none';
+  var r2 = document.getElementById('ronde2');
+  r2.style.display = 'block';
+  r2started = true;
+
+  // Peupler les noms des red flags dans chaque ligne
+  Object.keys(PAIRS).forEach(function(sigId) {
+    var p = PAIRS[sigId];
+    var nameEl = document.getElementById('rfname-' + p.card + '-' + p.sys);
+    if (nameEl) nameEl.textContent = CARD_NAMES[p.card] || p.card;
+  });
+
+  // Scroll vers ronde 2
+  setTimeout(function() { r2.scrollIntoView({ behavior:'smooth', block:'start' }); }, 100);
+};
+
+// Clic sur carte signification
+document.addEventListener('click', function(e) {
+  if (!r2started) return;
+
+  // Clic sur sig-card
+  var sc = e.target.closest('.sig-card');
+  if (sc && !sc.classList.contains('sig-done')) {
+    var sid2 = sc.dataset.sigId;
+    if (selectedSig === sid2) { deselect2(); return; }
+    if (selectedSig) {
+      var prev = document.querySelector('.sig-card[data-sig-id="' + selectedSig + '"]');
+      if (prev) prev.classList.remove('sig-selected');
+    }
+    selectedSig = sid2;
+    sc.classList.add('sig-selected');
+    // Activer colonnes
+    document.querySelectorAll('.col2').forEach(function(c) { c.classList.add('target2-active'); });
+    // Activer les lignes rf-row correspondantes (meme sys)
+    var pairSys = PAIRS[sid2] ? PAIRS[sid2].sys : null;
+    document.querySelectorAll('.rf-row').forEach(function(row) {
+      row.classList.remove('target2-row');
+      if (pairSys && row.dataset.sys === pairSys) row.classList.add('target2-row');
+    });
+    document.getElementById('sel-txt2').textContent = sc.textContent.trim();
+    document.getElementById('sel-bar2').classList.add('visible');
+    return;
+  }
+
+  // Clic sur btn2-verify
+  var bv = e.target.closest('.btn2-verify');
+  if (bv) { verify2sys(bv.dataset.sys); return; }
+
+  // Clic sur rf-row
+  var row = e.target.closest('.rf-row');
+  if (row && selectedSig) {
+    var p = PAIRS[selectedSig];
+    if (!p) return;
+    var targetCard = row.dataset.card;
+    var targetSys  = row.dataset.sys;
+    var correct = (p.card === targetCard && p.sys === targetSys);
+
+    if (correct) {
+      placedSig[selectedSig] = true;
+      // Afficher la signification dans la ligne (grise — pas encore validee)
+      var sigEl = document.getElementById('rfsig-' + p.card + '-' + p.sys);
+      if (sigEl) { sigEl.textContent = p.sig; sigEl.className = 'rf-row-sig'; }
+      // Griser la carte sig
+      var sc2 = document.querySelector('.sig-card[data-sig-id="' + selectedSig + '"]');
+      if (sc2) { sc2.classList.remove('sig-selected'); sc2.classList.add('sig-done'); }
+      // Update compteur
+      updateCnt2(targetSys);
+      deselect2();
+      // Reset vérif si déjà validée
+      if (verified2[targetSys] !== undefined) {
+        verified2[targetSys] = undefined;
+        var col2 = document.querySelector('.col2[data-sys="' + targetSys + '"]');
+        if (col2) col2.classList.remove('v2-ok','v2-fail');
+        var fb2 = document.querySelector('.col2-feedback[data-sys="' + targetSys + '"]');
+        if (fb2) { fb2.className = 'col2-feedback'; fb2.textContent = ''; }
+        // Reset couleurs des lignes
+        document.querySelectorAll('#pairs-' + targetSys + ' .rf-row-sig').forEach(function(s) {
+          s.classList.remove('filled-ok','filled-fail');
+        });
+        document.querySelector('.col2[data-sys="' + targetSys + '"] .btn2-verify').textContent = 'Verifier cette section';
+      }
+    } else {
+      // Mauvais — trembler la ligne
+      row.style.animation = 'shake .28s';
+      setTimeout(function() { row.style.animation = ''; }, 320);
+    }
+    return;
+  }
+
+  // Clic en dehors
+  if (!e.target.closest('#bank2') && !e.target.closest('#grid2') && !e.target.closest('#sel-bar2')) {
+    deselect2();
+  }
+});
+
+window.deselect2 = function() {
+  if (selectedSig) {
+    var sc = document.querySelector('.sig-card[data-sig-id="' + selectedSig + '"]');
+    if (sc && !sc.classList.contains('sig-done')) sc.classList.remove('sig-selected');
+  }
+  selectedSig = null;
+  document.querySelectorAll('.col2').forEach(function(c) { c.classList.remove('target2-active'); });
+  document.querySelectorAll('.rf-row').forEach(function(r) { r.classList.remove('target2-row'); });
+  document.getElementById('sel-bar2').classList.remove('visible');
+};
+
+function updateCnt2(sysId) {
+  var total = Object.keys(PAIRS).filter(function(k) { return PAIRS[k].sys === sysId; }).length;
+  var done  = Object.keys(placedSig).filter(function(k) { return PAIRS[k] && PAIRS[k].sys === sysId && placedSig[k] === true; }).length;
+  var el = document.querySelector('.col2-cnt[data-sys="' + sysId + '"]');
+  if (el) el.textContent = done + '/' + total;
+}
+
+function verify2sys(sysId) {
+  deselect2();
+  var col2 = document.querySelector('.col2[data-sys="' + sysId + '"]');
+  var fb   = document.querySelector('.col2-feedback[data-sys="' + sysId + '"]');
+  col2.classList.remove('v2-ok','v2-fail','target2-active');
+  fb.className = 'col2-feedback show';
+
+  var expected = Object.keys(PAIRS).filter(function(k) { return PAIRS[k].sys === sysId; });
+  var correct  = expected.filter(function(k) { return placedSig[k] === true; });
+  var missing  = expected.filter(function(k) { return placedSig[k] !== true; });
+
+  // Colorier les lignes
+  expected.forEach(function(k) {
+    var p = PAIRS[k];
+    var sigEl = document.getElementById('rfsig-' + p.card + '-' + p.sys);
+    if (sigEl) {
+      if (placedSig[k] === true) {
+        sigEl.classList.remove('filled-fail');
+        sigEl.classList.add('filled-ok');
+      } else {
+        sigEl.classList.remove('filled-ok');
+      }
+    }
+  });
+
+  if (missing.length === 0) {
+    col2.classList.add('v2-ok');
+    fb.classList.add('ok');
+    fb.textContent = 'Parfait — toutes les associations sont correctes !';
+    col2.querySelector('.btn2-verify').textContent = 'Section validee';
+    verified2[sysId] = true;
+    checkFinish2();
+  } else {
+    col2.classList.add('v2-fail');
+    fb.classList.add('fail');
+    fb.textContent = correct.length + ' / ' + expected.length + ' correct(s). Il manque encore ' + missing.length + ' association(s).';
+    verified2[sysId] = false;
+  }
+}
+
+function checkFinish2() {
+  var sys = ['syncope','arythmie','choc','ic','hypo','avc','conv','abdo'];
+  if (sys.every(function(s) { return verified2[s] === true; })) {
+    var f = document.getElementById('finish2');
+    f.style.display = 'block';
+    setTimeout(function() { f.scrollIntoView({ behavior:'smooth', block:'nearest' }); }, 100);
   }
 }
 
