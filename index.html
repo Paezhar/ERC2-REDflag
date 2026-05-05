@@ -1162,6 +1162,17 @@ document.querySelectorAll('#bank .card').forEach(function(card) {
 });
 document.getElementById('st').textContent = totalPlaceable;
 
+  // Melanger la banque au chargement initial
+  (function shuffleOnLoad() {
+    var bank = document.getElementById('bank');
+    var cards = Array.from(bank.querySelectorAll('.card'));
+    for (var i = cards.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      bank.insertBefore(cards[j], cards[i]);
+      var t = cards[i]; cards[i] = cards[j]; cards[j] = t;
+    }
+  })();
+
 // ── Selection ─────────────────────────────────────────────────────────────────
 document.getElementById('bank').addEventListener('click', function(e) {
   var card = e.target.closest('.card');
@@ -1551,6 +1562,15 @@ window.startRonde2 = function() {
     var nameEl = document.getElementById('rfname-' + p.card + '-' + p.sys);
     if (nameEl) nameEl.textContent = CARD_NAMES[p.card] || p.card;
   });
+
+  // Melanger les cartes signification
+  var bank2 = document.getElementById('bank2');
+  var sigCards = Array.from(bank2.querySelectorAll('.sig-card'));
+  for (var i = sigCards.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    bank2.insertBefore(sigCards[j], sigCards[i]);
+    var t = sigCards[i]; sigCards[i] = sigCards[j]; sigCards[j] = t;
+  }
 
   // Scroll vers ronde 2
   setTimeout(function() { r2.scrollIntoView({ behavior:'smooth', block:'start' }); }, 100);
