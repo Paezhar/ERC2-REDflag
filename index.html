@@ -424,7 +424,6 @@ main { padding: 18px 22px; max-width: 1500px; margin: 0 auto; }
     <div class="card" data-id="c35" data-sys="abdo">Rectorragie franche + instabilite hemodynamique</div>
     <div class="card" data-id="c36" data-sys="avc">AEC + vomissements en jet + anisocorie</div>
     <div class="card" data-id="c37" data-sys="hypo,conv"><span class="dot-m"></span>Tremblements</div>
-    <div class="card" data-id="c38" data-sys="hypo,arythmie"><span class="dot-m"></span>Pediatrie : bradycardie + hypothermie + pauses respiratoires</div>
   </div>
 
   <div id="grid">
@@ -493,12 +492,11 @@ main { padding: 18px 22px; max-width: 1500px; margin: 0 auto; }
           <div class="ddx-line" data-flag="c04"><span class="ddx-flag-name">Hypotension</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Choc bradycardique</span></div>
           <div class="ddx-line" data-flag="c07"><span class="ddx-flag-name">FC > TAS</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Indicateur de choc severe</span></div>
         </div>
-        <div class="ddx-group" data-group="arythmie-4" data-flags="c06,c07,c09,c38">
+        <div class="ddx-group" data-group="arythmie-4" data-flags="c06,c07,c09">
           <div class="ddx-group-name">Intoxication (digoxine, betabloq.)</div>
           <div class="ddx-line" data-flag="c06"><span class="ddx-flag-name">Bradycardie + hypoperfusion</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Effet chronotrope negatif</span></div>
           <div class="ddx-line" data-flag="c07"><span class="ddx-flag-name">FC > TAS</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Choc medicamenteux</span></div>
           <div class="ddx-line" data-flag="c09"><span class="ddx-flag-name">Diaphorese</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Hypoperfusion / nausees toxiques</span></div>
-          <div class="ddx-line" data-flag="c38"><span class="ddx-flag-name">Bradycardie + hypothermie (pediatrie)</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Stade preterminal — risque ACR imminent</span></div>
         </div>
       </div>
     </div>
@@ -601,10 +599,7 @@ main { padding: 18px 22px; max-width: 1500px; margin: 0 auto; }
           <div class="ddx-line" data-flag="c08"><span class="ddx-flag-name">AEC / agitation</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Hypoglycemie + depression SNC</span></div>
           <div class="ddx-line" data-flag="c05"><span class="ddx-flag-name">Tachycardie</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Reponse sympathique</span></div>
         </div>
-        <div class="ddx-group" data-group="hypo-4" data-flags="c38">
-          <div class="ddx-group-name">Hypoglycemie pediatrique</div>
-          <div class="ddx-line" data-flag="c38"><span class="ddx-flag-name">Bradycardie + hypothermie + pauses respi</span><span class="ddx-arrow">&#8594;</span><span class="ddx-diag">Presentation atypique — presentation neonatale / nourrisson</span></div>
-        </div>
+
       </div>
     </div>
 
@@ -755,10 +750,8 @@ main { padding: 18px 22px; max-width: 1500px; margin: 0 auto; }
     <div class="sig-card" data-sig-id="s_c08_choc" data-card="c08" data-sys="choc">Hypoperfusion cerebrale</div>
     <div class="sig-card" data-sig-id="s_c25_choc" data-card="c25" data-sys="choc">Rupture AAA — hemorragie retroperitoneale</div>
     <div class="sig-card" data-sig-id="s_c08_hypo" data-card="c08" data-sys="hypo">Neuroglycopenie — cerveau prive de glucose</div>
-    <div class="sig-card" data-sig-id="s_c38_hypo" data-card="c38" data-sys="hypo">Presentation atypique — depression metabolique severe</div>
     <div class="sig-card" data-sig-id="s_c10_ic" data-card="c10" data-sys="ic">Bas debit + vasoconstriction compensatrice</div>
     <div class="sig-card" data-sig-id="s_c12_choc" data-card="c12" data-sys="choc">Debit cardiaque effondre</div>
-    <div class="sig-card" data-sig-id="s_c38_arythmie" data-card="c38" data-sys="arythmie">Stade preterminal pediatrique — risque ACR imminent</div>
     <div class="sig-card" data-sig-id="s_c15_conv" data-card="c15" data-sys="conv">Apnee post-ictale — hypoventilation</div>
     <div class="sig-card" data-sig-id="s_c17_hypo" data-card="c17" data-sys="hypo">Critere diagnostique — seuil d'intervention</div>
     <div class="sig-card" data-sig-id="s_c36_avc" data-card="c36" data-sys="avc">HTIC severe — engagement cerebral imminent</div>
@@ -866,10 +859,6 @@ main { padding: 18px 22px; max-width: 1500px; margin: 0 auto; }
         <div class="rf-row" id="rfrow-c29-arythmie" data-card="c29" data-sys="arythmie">
           <div class="rf-row-name" id="rfname-c29-arythmie">...</div>
           <div class="rf-row-sig" id="rfsig-c29-arythmie">Associer une signification...</div>
-        </div>
-        <div class="rf-row" id="rfrow-c38-arythmie" data-card="c38" data-sys="arythmie">
-          <div class="rf-row-name" id="rfname-c38-arythmie">...</div>
-          <div class="rf-row-sig" id="rfsig-c38-arythmie">Associer une signification...</div>
         </div>
       </div>
       <button class="btn2-verify" data-sys="arythmie">Verifier cette section</button>
@@ -1019,10 +1008,6 @@ main { padding: 18px 22px; max-width: 1500px; margin: 0 auto; }
         <div class="rf-row" id="rfrow-c37-hypo" data-card="c37" data-sys="hypo">
           <div class="rf-row-name" id="rfname-c37-hypo">...</div>
           <div class="rf-row-sig" id="rfsig-c37-hypo">Associer une signification...</div>
-        </div>
-        <div class="rf-row" id="rfrow-c38-hypo" data-card="c38" data-sys="hypo">
-          <div class="rf-row-name" id="rfname-c38-hypo">...</div>
-          <div class="rf-row-sig" id="rfsig-c38-hypo">Associer une signification...</div>
         </div>
       </div>
       <button class="btn2-verify" data-sys="hypo">Verifier cette section</button>
@@ -1457,7 +1442,6 @@ var PAIRS = {
   "s_c06_arythmie": { card:"c06", sys:"arythmie", sig:"BAV ou dysfonction sinusale — debit insuffisant" },
   "s_c09_arythmie": { card:"c09", sys:"arythmie", sig:"Activation sympathique — hypoperfusion" },
   "s_c29_arythmie": { card:"c29", sys:"arythmie", sig:"Ischemie concomitante ou embolie pulmonaire" },
-  "s_c38_arythmie": { card:"c38", sys:"arythmie", sig:"Stade preterminal pediatrique — risque ACR imminent" },
   "s_c04_choc": { card:"c04", sys:"choc", sig:"Defaillance circulatoire decompensee" },
   "s_c05_choc": { card:"c05", sys:"choc", sig:"Mecanisme compensatoire — maintien du debit cardiaque" },
   "s_c06_choc": { card:"c06", sys:"choc", sig:"Choc bradycardique — effondrement du debit" },
@@ -1487,7 +1471,6 @@ var PAIRS = {
   "s_c16_hypo": { card:"c16", sys:"hypo", sig:"Neuroglycopenie focalisee — mime un AVC" },
   "s_c17_hypo": { card:"c17", sys:"hypo", sig:"Critere diagnostique — seuil d'intervention" },
   "s_c37_hypo": { card:"c37", sys:"hypo", sig:"Premier signe adrenerglique — deficit en glucose" },
-  "s_c38_hypo": { card:"c38", sys:"hypo", sig:"Presentation atypique — depression metabolique severe" },
   "s_c08_avc": { card:"c08", sys:"avc", sig:"Compression ou destruction du tissu cerebral" },
   "s_c16_avc": { card:"c16", sys:"avc", sig:"Infarctus ou hemorragie — territoire vasculaire" },
   "s_c18_avc": { card:"c18", sys:"avc", sig:"Deficit moteur / langage / facial — territoire anterieur" },
@@ -1549,7 +1532,6 @@ var CARD_NAMES = {
   "c35": "Rectorragie franche + instabilite hemodynamique",
   "c36": "AEC + vomissements en jet + anisocorie",
   "c37": "Tremblements",
-  "c38": "Pediatrie : bradycardie + hypothermie + pauses respiratoires",
 };
 
 var placedSig = {};   // sigId -> bool (correct=true)
